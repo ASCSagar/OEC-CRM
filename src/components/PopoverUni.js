@@ -1,0 +1,27 @@
+import React from "react";
+import { Form, Popover } from "react-bootstrap";
+
+function PopoverUni() {
+  return (
+    <Popover id="popover-basic">
+      <Popover.Body>
+        <Form.Group className="mb-3 col-md-12" controlId="stuName">
+          <Form.Control
+            type="text"
+            name="stuName"
+            // value={uniState.name}
+            value=""
+            // onChange={(e) =>
+            //   dispatchUniState({
+            //     type: "name",
+            //     value: e.target.value,
+            //   })
+            // }
+          />
+        </Form.Group>
+      </Popover.Body>
+    </Popover>
+  );
+}
+
+export default PopoverUni;
