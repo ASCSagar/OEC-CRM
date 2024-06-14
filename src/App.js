@@ -11,7 +11,6 @@ import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
-  useNavigate,
 } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Register from "./pages/Register";
@@ -31,6 +30,7 @@ import University from "./pages/University";
 import ErrorBoundary from "./components/ErrorBoundry";
 import StudentDashboard from "./pages/StudentDashboard";
 import { useEffect } from "react";
+import Enquriy from "./pages/Enquriy";
 
 const router = createBrowserRouter(
   [
@@ -104,6 +104,10 @@ const router = createBrowserRouter(
           element: <Search />,
         },
         {
+          path: "website-enquiry",
+          element: <Enquriy />,
+        },
+        {
           path: "university",
           element: <University />,
         },
@@ -135,7 +139,6 @@ function App() {
   useEffect(() => {
     tele.ready();
   });
-  // const navigate = useNavigate();
   return (
     <>
       <ErrorBoundary>
