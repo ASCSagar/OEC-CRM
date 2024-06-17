@@ -30,7 +30,7 @@ function CourseUniData(props) {
   const dispatch = useDispatch();
   const deleteAppDetails = useRef({});
   const getAssignUsrData = async function () {
-    const response = await ajaxCallWithHeaderOnly("userlist", {
+    const response = await ajaxCallWithHeaderOnly("userlist/", {
       Authorization: `Bearer ${authData.accessToken}`,
     });
     if (response?.isNetwork) {

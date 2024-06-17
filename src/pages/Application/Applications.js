@@ -156,7 +156,7 @@ function Applications(props) {
   //   }
   // }, [fileUpload]);
   const getAssignUsrData = async function () {
-    const response = await ajaxCallWithHeaderOnly("userlist", {
+    const response = await ajaxCallWithHeaderOnly("userlist/", {
       Authorization: `Bearer ${authData.accessToken}`,
     });
     if (response?.isNetwork) {
@@ -764,7 +764,7 @@ function Applications(props) {
                   onChange={filterSelectionChanged.bind(null, "assigned_usr")}
                   name="assUser"
                   value={appFilter.assigned_usr}
-                  url="userlist/"
+                  url="userlist/?course_related=true"
                   isSearch={true}
                   objKey="username"
                 />

@@ -283,7 +283,7 @@ function Enquiries() {
   }, [throwErr]);
 
   const getAssignUsrData = async function () {
-    const response = await ajaxCallWithHeaderOnly("userlist", {
+    const response = await ajaxCallWithHeaderOnly("userlist/", {
       Authorization: `Bearer ${authData.accessToken}`,
     });
     if (response?.isNetwork) {
