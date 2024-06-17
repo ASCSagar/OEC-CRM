@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const Enquriy = () => {
   const authData = useSelector((state) => state.authStore);
-  const [contactData, setContactData] = useState({});
+  const [contactData, setContactData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // for pagination
@@ -74,9 +74,9 @@ const Enquriy = () => {
       "GET",
       null
     );
-    if (response?.length > 0) {
-      setTotalRows(10);
-      setContactData(response);
+    if (response?.results?.length > 0) {
+      setTotalRows(response?.count);
+      setContactData(response?.results);
     } else {
       setTotalRows(0);
       setContactData([]);
