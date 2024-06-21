@@ -30,7 +30,6 @@ const InitialState = {
   currentEducation: "",
   countryInterested: 1,
   notes: "",
-  // assignedUser: "",
   enqStatus: "",
   passportNum: "",
   married: "",
@@ -65,7 +64,6 @@ const reducer = (state, action) => {
       refusalDoc: action.data.refusalDoc,
     };
   }
-  console.log(action.type, action.value);
   return { ...state, [action.type]: action.value };
 };
 function EnquiryForm(props) {
@@ -79,45 +77,13 @@ function EnquiryForm(props) {
   const authData = useSelector((state) => state.authStore);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let initializeReducer;
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   useEffect(() => {
     try {
-      // if (props.isFlow) {
-      //   dispatchInputChange({
-      //     all: true,
-      //     data: {
-      //       stuName: props?.name ? props?.name : "",
-      //       stuPhone: "",
-      //       stuEmail: "",
-      //       stuAddress: "",
-      //       currentEducation: "",
-      //       countryInterested: 1,
-      //       uniInterested: props.uniId,
-      //       levelApplying: props.level,
-      //       courseInterested: props.courseId,
-      //       intakeInterested: props.intake,
-      //       notes: "",
-      //       // assignedUser: "",
-      //       enqStatus: "",
-      //       passportNum: "",
-      //       married: "",
-      //       nationality: "",
-      //       dob: "",
-      //       stuState: "",
-      //       stuStateISO: "",
-      //       stuCountry: "India",
-      //       stuCountryISO: "IN",
-      //       stuZip: "",
-      //       stuCity: "",
-      //       stuCityISO: "",
-      //       previousVisaRefusal: false,
-      //       refusalDoc: null,
-      //     },
-      //   });
-      // }
       if (!props.edit) return;
       setLoadError({ isLoading: true, isError: false, isSubmitting: false });
       const data = async () => {
@@ -129,7 +95,6 @@ function EnquiryForm(props) {
           "POST",
           null
         );
-        // console.log(response);
         if (response?.isNetwork) {
           setThrowErr({ ...response, page: "enqForm" });
           return;
@@ -185,8 +150,6 @@ function EnquiryForm(props) {
 
   const [formData, dispatchInputChange] = useReducer(reducer, InitialState);
   const selectionBoxChanged = (fieldName, val, allVal) => {
-    // console.log(allVal);
-    // console.log(val);
     dispatchInputChange({
       type: fieldName,
       value: allVal.value,
@@ -194,8 +157,6 @@ function EnquiryForm(props) {
   };
 
   const addressChanged = (fieldName1, fieldName2, val, allVal) => {
-    console.log(val);
-    console.log(allVal);
     dispatchInputChange({
       type: fieldName1,
       value: allVal.value,
@@ -205,8 +166,6 @@ function EnquiryForm(props) {
       value: allVal.name,
     });
   };
-
-  // console.log("values are", formData.uniInterested, formData.levelApplying);
   const submitEnquiry = function (e) {
     e.preventDefault();
     try {
@@ -217,8 +176,6 @@ function EnquiryForm(props) {
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           );
       };
-      // 1st :
-
       if (!formData.stuName && !formData.stuName.trim()?.length) {
         setLoadError({
           isLoading: false,
@@ -279,7 +236,6 @@ function EnquiryForm(props) {
         !formData.countryInterested ||
         !formData.dob
       ) {
-        console.log(formData);
         setLoadError({
           isLoading: false,
           isSubmitting: false,
@@ -288,9 +244,6 @@ function EnquiryForm(props) {
         });
         return;
       }
-
-      // const date = date.split("-").reverse().join("-");
-      // const dob = d;
       const enqData = new FormData();
       enqData.append("student_name", formData.stuName);
       enqData.append("student_phone", formData.stuPhone);
@@ -299,8 +252,6 @@ function EnquiryForm(props) {
       enqData.append("current_education", formData.currentEducation);
       enqData.append("country_interested", formData.countryInterested);
       enqData.append("notes", formData.notes);
-      // if (formData.enqStatus)
-      //   enqData.append("enquiry_status", formData.enqStatus);
       if (formData.passportNum)
         enqData.append("passport_number", formData.passportNum);
       enqData.append("married", formData.married);
@@ -351,11 +302,7 @@ function EnquiryForm(props) {
           });
           return;
         }
-        const statusCode = props.edit ? 200 : 201;
-        // console.log(response?.status, statusCode);
         if (!response?.status) {
-          // console.log(response);
-          // console.log(response);
           if (props.edit) {
             dispatch(
               uiAction.setNotification({
@@ -395,15 +342,10 @@ function EnquiryForm(props) {
   };
 
   const handleFileChange = (fileName, file) => {
-    // console.log(fileName, file);
     dispatchInputChange({ type: fileName, value: file });
   };
-  // console.log("", formData.university_interested, formData.level_applying_for);
   if (loadError.isLoading) return <LoadingData className="loading-spinner" />;
 
-  const changeTab = function () {
-    setKey(key ? 0 : 1);
-  };
   return (
     <div id="tabsSimple" className="col-xl-12 col-12 layout-spacing">
       <div className="neumorphism-box">
@@ -640,7 +582,6 @@ function EnquiryForm(props) {
                           "previousVisaRefusal"
                         )}
                         name="previousVisaRefusal"
-                        // placeholder="select from option"
                       />
                     </Form.Group>
                     {formData.previousVisaRefusal ? (
@@ -685,7 +626,6 @@ function EnquiryForm(props) {
                 <Button
                   variant="primary"
                   type="submit"
-                  // onClick={}
                   disabled={loadError.isSubmitting}
                 >
                   {loadError.isSubmitting ? "Submitting" : "Submit"}

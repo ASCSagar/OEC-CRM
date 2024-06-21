@@ -9,15 +9,17 @@ function SelectionBox(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [options, setOptions] = useState([]);
   const [throwErr, setThrowErr] = useState(null);
-  if (props.name === "courseInterested") {
-    // console.log("url is", props.url);
-  }
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
-  // console.log("group id and valuee is", props.groupId, props.value);
+
   useEffect(() => {
-    if (props.name !== "courseInterested" && props.name !== "married") {
+    if (
+      props.groupId !== "courseFilterApp" &&
+      props.name !== "courseInterested" &&
+      props.name !== "married"
+    ) {
       const data = async () => {
         setIsLoading(true);
         const response = await ajaxCallWithHeaderOnly(props.url, {
@@ -31,12 +33,14 @@ function SelectionBox(props) {
           setThrowErr({ ...response, page: "enquiries" });
           return;
         }
-        // console.log(response);
         setOptions((options) => {
           const date = new Date();
           const currentYr = date.getFullYear();
           let ajaxOptions;
-          if (props.url === "intakes/") {
+          if (
+            props.url === "intakes/" ||
+            props.url === "intakes/?course_related=true"
+          ) {
             ajaxOptions = [...response]
               .map((option) => {
                 const months = {
@@ -53,14 +57,7 @@ function SelectionBox(props) {
                   nov: 11,
                   dec: 12,
                 };
-                // option.intake_month;
                 const currentMonth = option.intake_month.split("-");
-                // console.log(currentMonth);
-                // console.log(currentMonth[1]);
-                // console.log(
-                //   "data is",
-                //   date.getMonth() + 1 <= months[currentMonth[1].toLowerCase()]
-                // );
                 if (currentYr === option.intake_year) {
                   if (
                     date.getMonth() + 1 <=
@@ -87,7 +84,6 @@ function SelectionBox(props) {
                     name: option.intake_month + " " + option.intake_year,
                   };
                 }
-                // return false;
               })
               .filter((data) => data);
           } else {
@@ -111,9 +107,13 @@ function SelectionBox(props) {
       setOptions(props.col);
     }
   }, [props.url]);
+
   useEffect(() => {
-    if (props.name === "courseInterested" && props.url.length) {
-      // console.log("i am inside and url is", props.url);
+    if (
+      (props.name === "courseInterested" ||
+        props.groupId === "courseFilterApp") &&
+      props.url.length
+    ) {
       setIsLoading(true);
       const data = async () => {
         const response = await ajaxCallWithHeaderOnly(props.url, {
@@ -127,7 +127,6 @@ function SelectionBox(props) {
           setThrowErr({ ...response, page: "select" });
           return;
         }
-        // console.log(response);
         setOptions((options) => {
           const ajaxOptions = [...response].map((option) => {
             return { value: option.id, name: option[props.objKey] };
@@ -162,6 +161,15 @@ function SelectionBox(props) {
       placeholder =
         "Select University, Intake & Course Level to load the courses";
   }
+  if (props?.groupId === "courseFilterApp") {
+    if (props.url) {
+      placeholder = isLoading
+        ? "Loading"
+        : options?.length
+        ? "Select from options"
+        : "No Data Found";
+    } else placeholder = "Select University to load the courses";
+  }
   return (
     <Form.Group className={props.groupClass} controlId={props.groupId}>
       {props?.label?.length ? (
@@ -169,7 +177,6 @@ function SelectionBox(props) {
       ) : (
         ""
       )}
-
       <SelectSearch
         disabled={props?.disabled}
         options={options}

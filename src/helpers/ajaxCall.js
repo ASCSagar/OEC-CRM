@@ -1,12 +1,10 @@
 function ajaxCall(subUrl, header, method, postData) {
-  // console.log(`url is : https://flyurdream.online/api/${subUrl}`);
   return fetch(`https://smhri.com/oeccrm/api/${subUrl}`, {
     headers: header,
     method: method,
     body: postData,
   })
     .then((response) => {
-      // console.log("response is", response);
       if (!response.ok) {
         return {
           status: response.status,
@@ -14,7 +12,6 @@ function ajaxCall(subUrl, header, method, postData) {
           isNetwork: false,
           error: "",
         };
-        // throw new Error("Network response was not OK" + response.ok);
       }
       return response.json();
     })
@@ -27,14 +24,11 @@ function ajaxCall(subUrl, header, method, postData) {
 }
 
 function ajaxCallWithoutBody(subUrl, header, method) {
-  // console.log(`url is : https://flyurdream.online/api/${subUrl}`);
   return fetch(`https://smhri.com/oeccrm/api/${subUrl}`, {
     headers: header,
     method: method,
   })
     .then((response) => {
-      // console.log(subUrl);
-      // console.log("status is", response.status);
       if (response.status === 204 || response.status === 404) {
         return true;
       }
@@ -54,12 +48,10 @@ function ajaxCallWithoutBody(subUrl, header, method) {
 }
 
 function ajaxCallWithHeaderOnly(subUrl, header) {
-  // console.log(`url is : https://flyurdream.online/api/${subUrl}`);
   return fetch(`https://smhri.com/oeccrm/api/${subUrl}`, {
     headers: header,
   })
     .then((response) => {
-      // console.log("response is", response);
       if (!response.ok) {
         return {
           status: response.status,
@@ -87,7 +79,6 @@ function ajaxCallWithHeaderOnly(subUrl, header) {
 }
 
 function ajaxCallWithHeader(subUrl, header) {
-  // console.log(`url is : https://flyurdream.online/api/${subUrl}`);
   return fetch(`https://smhri.com/oeccrm/api/${subUrl}`, {
     headers: header,
   })
@@ -95,21 +86,18 @@ function ajaxCallWithHeader(subUrl, header) {
       if (!response.ok) {
         throw new Error("Network response was not OK");
       }
-      // console.log(response);
       return response.json();
     })
     .catch((err) => console.log(err));
 }
 
 function ajaxCallUnauthorized(subUrl, header, method, postData) {
-  // console.log(`url is : https://flyurdream.online/api/${subUrl}`);
   return fetch(`https://smhri.com/oeccrm/api/${subUrl}`, {
     headers: header,
     method: method,
     body: postData,
   })
     .then((response) => {
-      // console.log("response is", response);
       if (response.status === 401) {
         return -1;
       }
