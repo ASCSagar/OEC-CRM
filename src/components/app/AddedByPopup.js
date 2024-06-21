@@ -19,14 +19,15 @@ function AddedByPopup(props) {
       setThrowErr({ ...response, page: "enquiries" });
       return;
     }
-    console.log(response);
     setPhone(response?.PhoneNumber);
   };
+
   useEffect(() => {
     if (props.id) {
       getPhoneNumber(props.id);
     }
   }, [props.id]);
+  
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);

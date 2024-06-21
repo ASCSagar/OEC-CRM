@@ -1,4 +1,4 @@
-import React, { useDebugValue, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ajaxCallWithHeaderOnly } from "../../helpers/ajaxCall";
 import { useSelector } from "react-redux";
 import LoadingData from "../UI/LoadingData";
@@ -14,9 +14,11 @@ function HomeStatisticsData() {
   });
 
   const [throwErr, setThrowErr] = useState(null);
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const authData = useSelector((state) => state.authStore);
   const bestEmpData = async () => {
     try {
@@ -40,7 +42,6 @@ function HomeStatisticsData() {
         setThrowErr({ ...response, page: "enquiries" });
         return;
       }
-      // console.log(response);
       if (response) {
         if (
           typeof response === "object" &&
@@ -49,9 +50,7 @@ function HomeStatisticsData() {
         ) {
           const bestApp = { name: "", apps: 0 };
           for (const [yr, data] of Object.entries(response)) {
-            console.log(yr);
-            if (+yr == new Date().getFullYear()) {
-              console.log("inside");
+            if (+yr === new Date().getFullYear()) {
               for (const [name, apps] of Object.entries(data)) {
                 if (apps > bestApp.apps) {
                   bestApp.name = name;
@@ -96,7 +95,6 @@ function HomeStatisticsData() {
         setThrowErr({ ...response, page: "enquiries" });
         return;
       }
-      // console.log(response);
       if (response.data) {
         if (
           typeof response.data === "object" &&
@@ -105,13 +103,9 @@ function HomeStatisticsData() {
         ) {
           const bestUnii = { name: "", apps: 0 };
           for (const [yr, data] of Object.entries(response.data)) {
-            console.log(yr);
-            if (+yr == new Date().getFullYear()) {
-              console.log("inside");
-
+            if (+yr === new Date().getFullYear()) {
               bestUnii.name = Object.keys(data)[0];
               bestUnii.apps = data[bestUnii.name];
-              console.log(bestUnii);
             }
           }
           setData((data) => {
@@ -150,7 +144,6 @@ function HomeStatisticsData() {
         setThrowErr({ ...response, page: "enquiries" });
         return;
       }
-      // console.log(response);
       if (response.data) {
         if (
           typeof response.data === "object" &&
@@ -159,13 +152,10 @@ function HomeStatisticsData() {
         ) {
           const bestCourse = { name: "", apps: 0 };
           for (const [yr, data] of Object.entries(response.data)) {
-            console.log(yr);
-            if (+yr == new Date().getFullYear()) {
-              console.log("inside");
+            if (+yr === new Date().getFullYear()) {
 
               bestCourse.name = Object.keys(data)[0];
               bestCourse.apps = data[bestCourse.name];
-              console.log(bestCourse);
             }
           }
           setData((data) => {

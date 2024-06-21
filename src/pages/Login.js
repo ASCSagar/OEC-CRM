@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link, json } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../components/UI/Form/Button";
 import InputBox from "../components/UI/Form/InputBox";
 import Notification from "../components/UI/Notification";
@@ -9,6 +9,7 @@ import { setToLocalStorage } from "../helpers/helperFunctions";
 import { authAction } from "../store/authStore";
 import { uiAction } from "../store/uiStore";
 import { Form } from "react-bootstrap";
+
 const InitialState = {
   userName: "",
   password: "",
@@ -17,7 +18,6 @@ const InitialState = {
   resetBtn: { text: "Click to get reset link", status: 0 },
 };
 const reducer = (state, action) => {
-  // state[action.type] = action.value;
   if (action.type === "userName") {
     return { ...state, userName: action.value };
   }
@@ -44,23 +44,19 @@ function Login() {
   const [formData, dispatchInputChange] = useReducer(reducer, InitialState);
   const [errorBou, setErrorBou] = useState(null);
   const dispath = useDispatch();
-  // const authData = useSelector((state) => state.authStore);
   const navigate = useNavigate();
-  // const navigateWithError = useNavigateWithError();
   const dispatch = useDispatch();
   const uiData = useSelector((state) => state.uiStore);
   const changeForm = () => {
     setLoginFormStatus((status) => !status);
   };
+
   useEffect(() => {
     if (errorBou) {
       throw errorBou;
     }
   }, [errorBou]);
-  // useEffect(() => {
-  //   if (errorLogin?.length) set;
-  // }, [errorLogin]);
-  // console.log("reducer is", formData);
+
   let doLogin;
   doLogin = async (e) => {
     e.preventDefault();
@@ -89,23 +85,18 @@ function Login() {
     const response = await ajaxCall(
       "user/login/",
       {
-        // "Access-Control-Allow-Origin": "*",
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       "POST",
       JSON.stringify(body)
     );
-    // console.log(response);
-    // try {
     if (response?.isNetwork) {
       setErrorBou({
         isNetwork: true,
         page: "login",
       });
       return;
-      // throw new Error("", { status: 401 });
-      // navigate("/error");
     }
     if (response?.status && response?.status === 400 && response?.notOk) {
       setErrorLogin("Username or Password can't be empty, Please try again..");
@@ -129,7 +120,6 @@ function Login() {
         timeOfLogin: Date.now(),
         userName: formData.userName,
       };
-      // console.log("localobj is", localObj);
       setToLocalStorage("loginInfo", localObj, true);
       dispath(
         authAction.setAuthStatus({
@@ -143,22 +133,6 @@ function Login() {
           logInOperation: 1,
         })
       );
-      // setTimeout(
-      //   () =>
-      //     dispath(
-      //       authAction.setAuthStatus({
-      //         userName: "",
-      //         loggedIn: false,
-      //         accessToken: null,
-      //         refreshToken: null,
-      //         userId: null,
-      //         user_type: null,
-      //         timeOfLogin: null,
-      //         logInOperation: -1,
-      //       })
-      //     ),
-      //   1000 * 60 * 30
-      // );
       navigate(`/`);
     } else if (response.errors.msg === -1) {
       setErrorLogin("Username or password is wrong please try again");
@@ -178,7 +152,6 @@ function Login() {
     });
     const validRegex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    // console.log("is validated>", validRegex(formData.forgotEmail));
     if (
       formData.forgotEmail.length < 1 ||
       !formData.forgotEmail.match(validRegex)
@@ -199,7 +172,6 @@ function Login() {
     const response = await ajaxCall(
       "user/resetpassword/",
       {
-        // "Access-Control-Allow-Origin": "*",
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -212,7 +184,6 @@ function Login() {
     if (response.msg === "Temporary password has been sent to the email id!") {
       changeForm();
       dispatchInputChange({ type: "forgotEmail", value: "" });
-      // console.log("yay");
       dispatch(
         uiAction.setNotification({
           show: true,
@@ -226,7 +197,6 @@ function Login() {
       text: "Click to get reset link",
       status: 0,
     });
-    // console.log(response);
   };
   return (
     <>
@@ -355,17 +325,6 @@ function Login() {
                           </div>
                         </div>
                       )}
-
-                      {/* <div className="col-12">
-                        <div className="text-center">
-                          <p className="mb-0">
-                            Dont't have an account ?{" "}
-                            <Link to="register" className="text-warning">
-                              Register
-                            </Link>
-                          </p>
-                        </div>
-                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -374,7 +333,7 @@ function Login() {
             <div className="iconWrapper">
               <a
                 className="icon-10 facebook loginPageIcon"
-                href="#"
+                href=" "
                 title="Facebook"
               >
                 <div class="ir">
@@ -390,7 +349,7 @@ function Login() {
               </a>
               <a
                 className="icon-17 linkedin loginPageIcon"
-                href="#"
+                href=" "
                 title="LinkedIn"
               >
                 <div class="ir">
@@ -406,7 +365,7 @@ function Login() {
               </a>
               <a
                 className="icon-15 instagram loginPageIcon"
-                href="#"
+                href=" "
                 title="Instagram"
               >
                 <div class="ir">

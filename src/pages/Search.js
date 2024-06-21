@@ -1,12 +1,10 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import { Form, OverlayTrigger, Popover, ProgressBar } from "react-bootstrap";
+import React, { useEffect, useReducer, useState } from "react";
+import { Form } from "react-bootstrap";
 import SelectionBox from "../components/UI/Form/SelectionBox";
-import LoaderUni from "../components/UI/Layouts/LoaderUni";
 import { ajaxCallWithHeaderOnly } from "../helpers/ajaxCall";
 import { useSelector } from "react-redux";
 import DataTable from "react-data-table-component";
 import LoadingData from "../components/UI/LoadingData";
-import { useNavigate } from "react-router-dom";
 import CreateEnquiry from "./Enquiry/CreateEnquiry";
 import UiModal from "../components/UI/UiModal";
 
@@ -58,8 +56,6 @@ const reducer = (state, action) => {
     isAll = isAll && (state.ielts || state.toefl || state.pte);
     isAll = isAll && state.intakeId;
     isAll = isAll && state.levelId && state.cSearch;
-    console.log("isall now", isAll);
-    // console.log("is All is", isAll);
     isAll = isAll ? 1 : 0;
     if (load) {
       const remainSteps = 4 - load / 25;
@@ -67,9 +63,6 @@ const reducer = (state, action) => {
       loadText = `${remainSteps} steps remains to get list of courses`;
     }
     let filter = `?course_name=${state.cSearch}`;
-    // filter += state.ielts ? `&ielts_score=${state.ielts}` : "";
-    // filter += state.toefl ? `&ielts_score=${state.toefl}` : "";
-    // filter += state.pte ? `&ielts_score=${state.pte}` : "";
     return {
       ...state,
       loadPercent: load,
@@ -102,20 +95,18 @@ function Search() {
   // for showing popup
   const [enqPopup, setEnqPopup] = useState({ show: false, data: {} });
   const handlePerRowsChange = (newPerPage, page) => {
-    // console.log("per row is changed and data is", newPerPage, page);
     setPerPage(newPerPage);
     setPageNo(page);
     setUniData([]);
   };
   // pagination over
   const [uniState, dispatchUniState] = useReducer(reducer, initialState);
-  const navigate = useNavigate();
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
-  const authData = useSelector((state) => state.authStore);
-  const filter = useRef();
 
+  const authData = useSelector((state) => state.authStore);
   const goToEnqPage = function (uniId, courseId, course_levels) {
     setEnqPopup({
       show: true,
@@ -126,19 +117,8 @@ function Search() {
         courseId,
       },
     });
-    // navigate("/enquiry/create", {
-    //   state: {
-    //     uniId,
-    //     courseId,
-    //     search: uniState.cSearch,
-    //     levelId: uniState.levelId,
-    //     name: uniState.name,
-    //     intake: uniState.intakeId,
-    //     giveBackBtn: true,
-    //   },
-    // });
   };
-  // const isAll = uniState.ielts || uniState.ielts || uniState.ielts;
+
   const uniColumns = [
     {
       name: "University Name",
@@ -183,7 +163,6 @@ function Search() {
       "POST",
       null
     );
-    console.log(response);
     if (response?.isNetwork) {
       setThrowErr({ ...response, page: "enquiries" });
       return;
@@ -214,7 +193,6 @@ function Search() {
     });
   };
   useEffect(() => {
-    console.log(uniState.isAll && uniState.refresh);
     try {
       if (uniState.cSearch) getData();
     } catch (e) {
@@ -234,33 +212,8 @@ function Search() {
     pageNo,
   ]);
 
-  const popoverSearch = (
-    <Popover id="popoverName">
-      <Popover.Body>
-        <Form.Group className="mb-3 col-md-12" controlId="cSearch">
-          <Form.Control
-            type="text"
-            name="cSearch"
-            value={uniState.cSearch}
-            onChange={(e) => {
-              dispatchUniState({
-                type: "cSearch",
-                value: e.target.value,
-              });
-              dispatchUniState({
-                type: "checkThings",
-              });
-            }}
-          />
-        </Form.Group>
-      </Popover.Body>
-    </Popover>
-  );
-
   // level and intake filter
   const selectValueChanged = function (typeId, typeName, val, name) {
-    // console.log(val);
-    // console.log(name);
     if (name) {
       dispatchUniState({
         type: typeId,
@@ -284,21 +237,6 @@ function Search() {
     <div class="row layout-spacing">
       <div class="neumorphism-box nmb">
         <div class="col-lg-12 flex-main">
-          {/* <div className="uniForm text-center">
-            Please find me course of{" "}
-            <OverlayTrigger
-              placement="bottom"
-              trigger="click"
-              overlay={popoverSearch}
-              rootClose
-            >
-              <span className="uniSName">
-                {uniState.cSearch?.length
-                  ? uniState.cSearch
-                  : "(Specialization)"}
-              </span>
-            </OverlayTrigger>{" "}
-          </div> */}
           <Form.Group className="mb-3 col-md-6" controlId="cSearch">
             <Form.Label>Search Course</Form.Label>
             <Form.Control
@@ -322,22 +260,6 @@ function Search() {
         <div class="col-lg-12">
           {uniState.cSearch ? (
             <>
-              {/* <div className="row nomp">
-                <SelectionBox
-                  groupClass="mb-3 col-md-3 selectbox"
-                  groupId="uniFilter"
-                  label="Filter Courses By Universities"
-                  // onChange={props.filterSelectionChanged.bind(
-                  //   null,
-                  //   "university_interested"
-                  // )}
-                  // value={props.enqFilter.university_interested}
-                  name="uniFilter"
-                  url={`courses/universities/${uniState.filter}`}
-                  isSearch={true}
-                  objKey="univ_name"
-                />
-              </div> */}
               <div className="row">
                 <SelectionBox
                   groupClass="mb-3 col-md-2 selectbox"
@@ -372,7 +294,6 @@ function Search() {
               </div>
               <DataTable
                 onChangePage={(page) => {
-                  // console.log("new Page numbner is", page);
                   setPageNo(page);
                   setUniData([]);
                 }}

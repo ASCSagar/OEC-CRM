@@ -5,14 +5,7 @@ import { ajaxCall } from "../../helpers/ajaxCall";
 import { uiAction } from "../../store/uiStore";
 import { FileUploader } from "react-drag-drop-files";
 
-function CommentSnippet({
-  parentComment,
-  childComment,
-  enqId,
-  parentId,
-  refresh,
-}) {
-  const [comments, setComments] = useState(-1);
+function CommentSnippet({ parentComment, enqId, parentId, refresh }) {
   const [showInput, setShowInput] = useState({ show: false, id: null });
   const [replyInput, setReplyInput] = useState();
   const [replyFile, setReplyFile] = useState();
@@ -21,9 +14,11 @@ function CommentSnippet({
   const [throwErr, setThrowErr] = useState(null);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const sendReplyData = async function (input) {
     setSubmitting(true);
     try {
@@ -32,12 +27,6 @@ function CommentSnippet({
       fdata.append("parent", parentId);
       fdata.append("content", input);
       if (replyFile instanceof File) fdata.append("uploaded_file", replyFile);
-      // const data = {
-      //   object_id: enqId,
-      //   parent: parentId,
-      //   content: input,
-      // };
-
       const response = await ajaxCall(
         `app/postcomment/`,
         {
@@ -129,7 +118,6 @@ function CommentSnippet({
               onChange={(e) => setReplyInput(e.target.value)}
               placeholder="Write Comment Reply"
               autoFocus
-              // onBlur={addReply}
             />
           </Form.Group>
           <div className="col-md-6">
@@ -137,16 +125,6 @@ function CommentSnippet({
               handleChange={(file) => {
                 setReplyFile(file);
               }}
-              // handleChange={onChangeFile}
-              onDrop={(file) => {
-                // console.log("file is", file);
-              }}
-              onSelect={(file) => {
-                // console.log("file is", file);
-              }}
-              // name={props.fieldName}
-              // types={fileTypes}
-              // hoverTitle={props.title}
               minSize={0.0005}
               maxSize={0.5}
               types={["JPG", "PNG", "GIF", "JPEG", "docs", "pdf"]}

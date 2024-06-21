@@ -69,9 +69,6 @@ function DocumentRow(props) {
           name={docData.name}
           title={docData.title}
           uploadKey={props.uploadKey}
-          //   resetApp={() => {
-          //     setEnqData([]);
-          //   }}
           id={docData.id}
           setRefresherNeeded={props.setRefresherNeeded}
         />

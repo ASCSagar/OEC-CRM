@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ajaxCallWithHeaderOnly,
   ajaxCallWithoutBody,
@@ -16,7 +16,6 @@ import ChangeStatus from "../app/ChangeStatus";
 
 function CourseUniData(props) {
   const [enqData, setEnqData] = useState([]);
-  const [allEnq, setAllEnq] = useState(true);
   const [assignUsrData, setAssignUsrData] = useState([]);
   const [allStatus, setAllStatus] = useState([]);
   const [pageNo, setPageNo] = useState(1);
@@ -81,8 +80,6 @@ function CourseUniData(props) {
       setThrowErr({ ...response, page: "enquiries" });
       return;
     }
-    // console.log(response);
-
     if (response?.results?.length > 0) {
       setEnqData(response?.results);
       setTotalRows(response.count);
@@ -91,20 +88,15 @@ function CourseUniData(props) {
     }
     setIsLoadingData(false);
     props.setRefresherNeeded(false);
-    // setResetPagination(true);
   };
 
   useEffect(() => {
     if (props.refreshNeeded)
       getUniData(`get/courseinfo/?application=${props.appId}`);
   }, [props.appId, props.refreshNeeded]);
-  const handleChange = ({ selectedRows }) => {
-    // You can set state or dispatch with something like Redux so we can use the retrieved data
-    // console.log("Selected Rows: ", selectedRows);
-  };
+ 
 
   const handlePerRowsChange = (newPerPage, page) => {
-    // console.log("per row is changed and data is", newPerPage, page);
     setPerPage(newPerPage);
     setPageNo(page);
     setEnqData([]);
@@ -144,35 +136,12 @@ function CourseUniData(props) {
       cell: (row) => (
         <>
           <ExportPDF data={row} />
-          {/* <button
-            className="enquiryAction"
-            title="Edit Application"
-            onClick={() => {
-              navigate(`/application/edit/${row.id}`);
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-edit-2 p-1 br-8 mb-1"
-            >
-              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-            </svg>
-          </button> */}
           {authData.user_type === "superuser" ? (
             <button
               className="enquiryAction"
               title="Delete Application"
               onClick={() => {
                 promptDelete(props.stuName, row.id);
-                // deleteEnquiry(row.id);
               }}
             >
               <svg
@@ -287,7 +256,6 @@ function CourseUniData(props) {
         },
         "DELETE"
       );
-      // console.log("response is ", response);
       if (response !== true) {
         setThrowErr({ ...response, page: "applications" });
         return;
@@ -312,7 +280,6 @@ function CourseUniData(props) {
       <DataTable
         autoResetPage={true}
         onChangePage={(page) => {
-          // console.log("new Page numbner is", page);
           setPageNo(page);
           setEnqData([]);
           props.setRefresherNeeded(true);
@@ -321,7 +288,6 @@ function CourseUniData(props) {
         data={enqData}
         onChangeRowsPerPage={handlePerRowsChange}
         selectableRows
-        onSelectedRowsChange={handleChange}
         pagination
         paginationServer
         progressPending={isLoadingData}

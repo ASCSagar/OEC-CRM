@@ -4,10 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import LoadingData from "../../components/UI/LoadingData";
 import { ajaxCallWithHeaderOnly } from "../../helpers/ajaxCall";
 import { useSelector } from "react-redux";
-import { Button } from "react-bootstrap";
 import CourseUniData from "../../components/StudentDashboard/CourseUniData";
 import AddCourseUni from "../../components/app/AddCourseUni";
-import AppDocDashboard from "../../components/app/AppDocDashboard";
 
 function StudentDashboard() {
   const [appDocInfo, setAppDocInfo] = useState({ isLoading: true, data: {} });
@@ -17,9 +15,11 @@ function StudentDashboard() {
   const enqId = useParams().enqId;
   const [throwErr, setThrowErr] = useState(null);
   const [refreshNeeded, setRefresherNeeded] = useState(true);
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const getEnqdata = async () => {
     const response = await ajaxCallWithHeaderOnly(
       `enquiries/${enqId}/`,
@@ -29,7 +29,6 @@ function StudentDashboard() {
       "POST",
       null
     );
-    // console.log(response);
     if (response?.isNetwork) {
       setThrowErr({ ...response, page: "enqForm" });
       return;
@@ -49,15 +48,18 @@ function StudentDashboard() {
     setData(response);
     setIsLoading(false);
   };
+
   useEffect(() => {
     if (enqId) {
       setIsLoading(true);
       getEnqdata();
     }
   }, [enqId]);
+
   if (isLoading) {
     return <LoadingData className="text-center" />;
   }
+  
   return (
     <>
       <div className="neumorphism-box">

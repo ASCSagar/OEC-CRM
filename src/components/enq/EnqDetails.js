@@ -1,13 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { ajaxCallWithHeaderOnly } from "../../helpers/ajaxCall";
-import { useSelector } from "react-redux";
-import LoadingData from "../../components/UI/LoadingData";
-import SelectionBox from "../../components/UI/Form/SelectionBox";
+import React from "react";
 import DocumentRow from "../app/DocumentRow";
 
 function EnqDetails({ data }) {
-  // states and reducers
-
   return (
     <>
       <div className="col-md-12">

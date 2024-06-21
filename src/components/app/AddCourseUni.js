@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import UiModal from "../UI/UiModal";
 import CourseUniForm from "./CourseUniForm";

@@ -1,17 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
-import { useRouteError, Link, Navigate, useNavigate } from "react-router-dom";
+import { useRouteError, Link } from "react-router-dom";
 import { uiAction } from "../store/uiStore";
 import { authAction } from "../store/authStore";
 import { deleteFromLocalStorage } from "../helpers/helperFunctions";
-import UiModal from "../components/UI/UiModal";
 
 function ErrorPage() {
   const error = useRouteError();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  // console.log("error is");
-  // console.log(error);
 
   if (error?.isNetwork) {
     return (
@@ -90,8 +86,6 @@ function ErrorPage() {
         <div class="text-center">
           <h1 class="display-1 fw-bold">{error?.status} Error Happened</h1>
           <p class="fs-3">
-            {/* <span class="text-danger">Opps!</span>
-             */}
           </p>
           <p class="lead">
             Looks like server is offline, If this problem persists for long
@@ -126,8 +120,6 @@ function ErrorPage() {
         <div class="text-center">
           <h1 class="display-1 fw-bold">{error?.status} Error Happened</h1>
           <p class="fs-3">
-            {/* <span class="text-danger">Opps!</span>
-             */}
           </p>
           <p class="lead">
             If this problem occur again, Please contact Developer
@@ -144,8 +136,6 @@ function ErrorPage() {
       <div class="text-center">
         <h1 class="display-1 fw-bold">{error?.status} Error Happened</h1>
         <p class="fs-3">
-          {/* <span class="text-danger">Opps!</span>
-           */}
         </p>
         <p class="lead">
           If this problem occur again, Please contact Developer

@@ -2,19 +2,13 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { enqAction } from "../../store/EnqColumns";
-// import { uiAction } from "../../store/uiStore";
+
 const allColumns = [
   { name: "Student Name", id: "name" },
   { name: "Student Phone", id: "phone" },
   { name: "Student Email", id: "email" },
   { name: "Current Education", id: "current_edu" },
   { name: "Country Interested", id: "country_interested" },
-  // { name: "University Interested", id: "university_interested" },
-  // { name: "Course Interested", id: "course_interested" },
-  // { name: "Level Applying For", id: "level_applying_for" },
-  // { name: "Intake Interested", id: "intake_interested" },
-  // { name: "Assigned Users", id: "assigned_user" },
-  // { name: "Enquiry Status", id: "enq_status" },
   { name: "Added By", id: "added_by" },
   { name: "Notes", id: "notes" },
   { name: "Date", id: "date" },

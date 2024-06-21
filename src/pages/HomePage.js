@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, InputGroup, Row, Alert } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import LoadingData from "../components/UI/LoadingData";
-import {
-  ajaxCallWithHeaderOnly,
-  ajaxCallWithoutBody,
-} from "../helpers/ajaxCall";
-import HomeStatisticsData from "../components/homepage/HomeStatisticsData";
+import { ajaxCallWithHeaderOnly } from "../helpers/ajaxCall";
 
 function HomePage() {
   const [enqData, setEnqData] = useState([]);
@@ -21,9 +17,7 @@ function HomePage() {
   const [isActivityLoadingData, setIsActivityLoadingData] = useState(false);
   const [throwErr, setThrowErr] = useState(null);
   const authData = useSelector((state) => state.authStore);
-  const navigate = useNavigate();
-  const columnData = useSelector((store) => store.enqColumn);
-  const dispatch = useDispatch();
+
   const enqColumns = [
     {
       name: "Student Name",
@@ -118,7 +112,6 @@ function HomePage() {
         setThrowErr({ ...response, page: "enquiries" });
         return;
       }
-      // console.log(response);
       if (response?.results?.length > 0) {
         const data = response.results.map((data) => {
           return {
@@ -166,7 +159,6 @@ function HomePage() {
         setThrowErr({ ...response, page: "enquiries" });
         return;
       }
-      // console.log(response);
       if (response?.results?.length > 0) {
         const data = response.results.map((data) => {
           return {
@@ -204,7 +196,6 @@ function HomePage() {
         setThrowErr({ ...response, page: "enquiries" });
         return;
       }
-      // console.log(response);
       if (response?.length) {
         const data = response.map((data) => {
           const date = new Date(data.action_time);
@@ -221,7 +212,6 @@ function HomePage() {
             ":" +
             date.getSeconds();
           const type = data.content_type.app_content.split("|");
-          // console.log(type);
           let actionUrl;
           if (data.action_flag != 3)
             actionUrl = `${type[0].trim()}/edit/${data.object_id}`;
@@ -238,7 +228,6 @@ function HomePage() {
                 : data?.action_flag === 2
                 ? "Updated"
                 : "Deleted",
-            // added_by: data.added_by.username,
             whoDid: data?.user?.username,
             actionId: data?.object_id,
             dateTime: date.toLocaleString(),
@@ -274,7 +263,6 @@ function HomePage() {
         setThrowErr({ ...response, page: "enquiries" });
         return;
       }
-      // console.log(response);
       if (response?.length) {
         const data = response
           .map((data) => {
@@ -309,106 +297,6 @@ function HomePage() {
     }
   }, []);
 
-  // for activity log svg
-  const activitySVG = {
-    enquiry: [
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-folder-plus"
-      >
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-        <line x1="12" y1="11" x2="12" y2="17"></line>
-        <line x1="9" y1="14" x2="15" y2="14"></line>
-      </svg>,
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-folder"
-      >
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-      </svg>,
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-folder-minus"
-      >
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-        <line x1="9" y1="14" x2="15" y2="14"></line>
-      </svg>,
-    ],
-    application: [
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-file-plus"
-      >
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-        <polyline points="14 2 14 8 20 8"></polyline>
-        <line x1="12" y1="18" x2="12" y2="12"></line>
-        <line x1="9" y1="15" x2="15" y2="15"></line>
-      </svg>,
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-file"
-      >
-        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-        <polyline points="13 2 13 9 20 9"></polyline>
-      </svg>,
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-file-minus"
-      >
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-        <polyline points="14 2 14 8 20 8"></polyline>
-        <line x1="9" y1="15" x2="15" y2="15"></line>
-      </svg>,
-    ],
-  };
   const covertToReadableDate = (startDate) => {
     const date = new Date(startDate);
     return (
@@ -427,7 +315,6 @@ function HomePage() {
   };
   return (
     <>
-      {/* <HomeStatisticsData /> */}
       <div className="dashboard row layout-spacing">
         {!isMsgLoadingData ? (
           msgData?.length ? (
@@ -440,20 +327,6 @@ function HomePage() {
                   <div>
                     {msgData.map((msg) => (
                       <Alert id={msg.id} variant="success">
-                        {/* <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-message-circle"
-                      >
-                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                      </svg> */}
                         <Alert.Heading>{msg.msg}</Alert.Heading>
                         <p>Date Posted {covertToReadableDate(msg.stDate)}</p>
                       </Alert>
@@ -511,63 +384,6 @@ function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* <div className="col-lg-4 widgetAreaDashboard gutter-sidebar-5">
-          <div className="neumorphism-box">
-            <div className="widget widget-activity-five">
-              <div className="widget-content">
-                <h2 className="wHeadingMain">Activity Log</h2>
-                <div className="w-shadow-top"></div>
-
-                <div className="mt-container mx-auto activity-log ">
-                  {!isActivityLoadingData ? (
-                    <div className="timeline-line">
-                      {activityData.map((activity) => (
-                        <div
-                          key={activity.mapId}
-                          className="item-timeline timeline-new"
-                        >
-                          <div className="t-dot">
-                            <div className="t-secondary">
-                              {
-                                activitySVG[activity.actionTypeText][
-                                  activity.actionStatusCode - 1
-                                ]
-                              }
-                            </div>
-                          </div>
-                          <div className="t-content">
-                            <div className="t-uppercontent">
-                              <h5 className="activityLogHeading">
-                                <Link to={activity.actionUrl}>
-                                  {activity.actionTypeText}{" "}
-                                  {activity.actionStatusText} For{" "}
-                                  {activity.actionPersonName}
-                                </Link>
-                                {activity.isUerNeeded ? (
-                                  <span> [By {activity.whoDid}]</span>
-                                ) : (
-                                  ""
-                                )}
-                              </h5>
-                            </div>
-                            <p>{activity.dateTime}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="loading-spinner-dashboard">
-                      <LoadingData />
-                    </div>
-                  )}
-                </div>
-
-                <div className="w-shadow-bottom"></div>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
     </>
   );

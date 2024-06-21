@@ -9,14 +9,7 @@ function PopoverUni() {
           <Form.Control
             type="text"
             name="stuName"
-            // value={uniState.name}
             value=""
-            // onChange={(e) =>
-            //   dispatchUniState({
-            //     type: "name",
-            //     value: e.target.value,
-            //   })
-            // }
           />
         </Form.Group>
       </Popover.Body>

@@ -1,11 +1,7 @@
-import React, { useReducer, useState } from "react";
+import React from "react";
 import EnquiryForm from "./EnquiryForm";
-import { useLocation } from "react-router-dom";
 
 function CreateEnquiry(props) {
-  // not needed for now as showing in popup
-  // const { state } = useLocation();
-  // console.log(state);
   return (
     <>
       <EnquiryForm

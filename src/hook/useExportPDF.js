@@ -1,52 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument } from "pdf-lib";
 
-import jsPDF, { header } from "jspdf";
+import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { renderToString } from "react-dom/server";
-import html2canvas from "html2canvas";
-import domtoimage from "dom-to-image";
 import { uiAction } from "../store/uiStore";
 import { useDispatch } from "react-redux";
-// import oecImg from "../../src/assets/img/oec.png";
-// const generateTablePDF = () => {
-//   const doc = new jsPDF();
-
-//   const headers = ["Header 1", "Header 2", "Header 3"];
-//   const data = [
-//     ["Cell 1", "Cell 2", "Cell 3"],
-//     ["Cell 4", "Cell 5", "Cell 6"],
-//     ["Cell 7", "Cell 8", "Cell 9"],
-//   ];
-
-//   const cellWidth = 10;
-//   const cellHeight = 10;
-//   const startY = 20;
-
-//   doc.setFontSize(12);
-//   doc.setFont("helvetica", "bold");
-//   doc.setTextColor(0, 0, 0);
-
-//   doc.autoTable({
-//     head: [headers],
-//     body: data,
-//     startY,
-//     theme: "plain",
-//     styles: {
-//       lineColor: [0, 0, 0],
-//       lineWidth: 0.2,
-//       fontSize: 10,
-//       font: "helvetica",
-//     },
-//     columnStyles: {
-//       0: { cellWidth },
-//       1: { cellWidth },
-//       2: { cellWidth },
-//     },
-//   });
-
-//   return doc.output("arraybuffer");
-// };
 
 const shouldInclude = (check, text) => {
   if (check) return text + "\n";
@@ -54,8 +13,6 @@ const shouldInclude = (check, text) => {
 };
 const generateTablePDF = async (data) => {
   const doc = new jsPDF();
-  // s
-  // doc.addImage(image, "JPEG", imageX, imageY, imageWidth, imageHeight);
   const tableData = [
     ["Student Name", data?.student_info?.name?.student_name],
     ["Student Phone", data?.student_info?.name?.student_phone],
@@ -102,7 +59,6 @@ const generateTablePDF = async (data) => {
   const textX = doc.internal.pageSize.width / 2; // Center the text horizontally
   const textY = doc.autoTable.previous.finalY + 20; // Adjust the vertical position of the text
   doc.text(text, textX, textY, { align: "center" });
-  // doc.save("output.pdf");
   return doc.output("arraybuffer");
 };
 const fetchPdf = async (url) => {
@@ -164,18 +120,15 @@ const useExportPDF = () => {
       data.passport,
       data.rcvd_offer_letter,
     ];
-    console.log(pdfUrls);
     pdfUrls = pdfUrls.filter((pdf) => {
       if (pdf) return true;
       else return false;
     });
-    console.log(pdfUrls);
     const mergedPdf = await PDFDocument.create();
 
     for (const [index, pdfUrl] of pdfUrls.entries()) {
       let pdfData, pdfDoc;
       if (index === 0) {
-        // pdfData = await fetchPdf(pdfUrl);
         pdfDoc = await PDFDocument.load(pdfUrl);
       } else if (pdfUrl.endsWith(".pdf")) {
         pdfData = await fetchPdf(pdfUrl);
@@ -208,7 +161,6 @@ const useExportPDF = () => {
       if (shouldMerge && data) {
         const htmlContent = (
           <table className="table table-striped">
-            {/* Table content here */}
           </table>
         );
 
@@ -228,7 +180,6 @@ const useExportPDF = () => {
             );
             setShouldMerge(false);
             setData(null);
-            console.error("Error generating PDF:", error);
           });
       }
     } catch {

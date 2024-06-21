@@ -1,16 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Button,
-  ButtonGroup,
-  Col,
-  Form,
-  InputGroup,
-  Row,
-} from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import SelectionBox from "../../components/UI/Form/SelectionBox";
 import LoadingData from "../../components/UI/LoadingData";
 import UiModal from "../../components/UI/UiModal";
 import {
@@ -19,27 +10,9 @@ import {
 } from "../../helpers/ajaxCall";
 import { uiAction } from "../../store/uiStore";
 import EnquiryColumnFilter from "./EnquiryColumnFilter";
-import ColumnFilter from "../../components/Filter/ColumnFilter";
 import EnquiryFilter from "./EnquiryFilter";
 import CommentPopup from "../../components/enq/CommentPopup";
-import DupEnq from "../../components/enq/DupEnq";
-import ChangeAssignUser from "../../components/enq/ChangeAssignUser";
-const handleButtonClick = (data) => {
-  // console.log(data);
-};
-const allColumns = [
-  { name: "Student Name", id: "name" },
-  { name: "Student Phone", id: "phone" },
-  { name: "Student Email", id: "email" },
-  { name: "Current Education", id: "current_edu" },
-  { name: "Country Interested", id: "country_interested" },
-  { name: "University Interested", id: "university_interested" },
-  { name: "Course Interested", id: "course_interested" },
-  { name: "Level Applying For", id: "level_applying_for" },
-  { name: "Intake Interested", id: "intake_interested" },
-  { name: "Added By", id: "added_by" },
-  { name: "Notes", id: "notes" },
-];
+
 function Enquiries() {
   const [enqData, setEnqData] = useState([]);
   const [allEnq, setAllEnq] = useState(true);
@@ -57,36 +30,19 @@ function Enquiries() {
   const [pageNo, setPageNo] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [totalRows, setTotalRows] = useState(0);
-  // const [resetPagination, setResetPagination] = useState(false);
-  const lastDataCount = useRef(0);
   const [showCommentPopup, setShowCommentPopup] = useState({
     show: false,
     enqId: null,
     name: null,
   });
-  // console.log("page no and per page data is", pageNo, perPage);
-
-  // const shouldPaginationReset = function () {
-  //   if (resetPagination) {
-  //     setResetPagination(false);
-  //     return true;
-  //   }
-  //   return false;
-  // };
-  const assignedUserFilter = () => {
-    setAllEnq((status) => !status);
-    setRefresherNeeded(true);
-  };
 
   const handlePerRowsChange = (newPerPage, page) => {
-    // console.log("per row is changed and data is", newPerPage, page);
     setPerPage(newPerPage);
     setPageNo(page);
     setEnqData([]);
     setRefresherNeeded(true);
   };
   // data table code ended
-
   // normal vars to set the student Name and id
   const deleteEntryDetails = useRef({});
   const [searchText, setSearchText] = useState("");
@@ -112,8 +68,6 @@ function Enquiries() {
         },
         "DELETE"
       );
-
-      // console.log("response is ", response);
       if (response !== true) {
         setThrowErr({ ...response, page: "enquiries" });
         return;
@@ -135,16 +89,10 @@ function Enquiries() {
     }
   };
 
-  const refreshAll = function () {
-    setRefresherNeeded(true);
-    setPageNo(1);
-    setEnqData([]);
-  };
   const columns = [
     {
       cell: (row) => (
         <>
-          {/* <DupEnq data={row} refresh={refreshAll} /> */}
           {row?.application_id ? (
             <Link to={`/student/${row.id}`} alt="Go To Dashboard">
               <svg
@@ -210,7 +158,6 @@ function Enquiries() {
             title="Delete Enquiry"
             onClick={() => {
               promptDelete(row.student_name, row.id);
-              // deleteEnquiry(row.id);
             }}
           >
             <svg
@@ -328,8 +275,6 @@ function Enquiries() {
       setThrowErr({ ...response, page: "enquiries" });
       return;
     }
-    // console.log(response);
-
     if (response?.results?.length > 0) {
       const data = response.results.map((data) => {
         return {
@@ -359,8 +304,8 @@ function Enquiries() {
     }
     setIsLoadingData(false);
     setRefresherNeeded(false);
-    // setResetPagination(true);
   };
+
   useEffect(() => {
     if (refreshNeeded) {
       let url = `enquiries/?ordering=-date_created&p=${pageNo}&records=${perPage}`;
@@ -394,11 +339,7 @@ function Enquiries() {
       setRefresherNeeded(false);
     }
   }, [enqFilter, refreshNeeded, allEnq, pageNo, perPage]);
-  const handleChange = ({ selectedRows }) => {
-    // You can set state or dispatch with something like Redux so we can use the retrieved data
-    // console.log("Selected Rows: ", selectedRows);
-  };
-  // const data = enqData;
+
   const filterSelectionChanged = function (filterName, val) {
     setEnqFilter((oldFilter) => {
       // copying object
@@ -452,10 +393,6 @@ function Enquiries() {
     setSearchText("");
   };
 
-  // to show the comment popup
-  const showComments = function (enqId, name) {
-    setShowCommentPopup({ show: true, enqId, name });
-  };
   return (
     <>
       <div className="row layout-spacing">
@@ -485,30 +422,9 @@ function Enquiries() {
                   enqFilter={enqFilter}
                   filterOnClick={clearFilter}
                 />
-                {/* {authData.user_type === "superuserr" ? (
-                  <div className="text-center mb-3">
-                    <Button
-                      variant={`${allEnq ? "primary" : "outline-primary"}`}
-                      className="mr-3"
-                      onClick={assignedUserFilter}
-                    >
-                      All Enqiry
-                    </Button>
-                    <Button
-                      variant={`${allEnq ? "outline-primary" : "primary"}`}
-                      onClick={assignedUserFilter}
-                    >
-                      Enquiry With No Assigned User
-                    </Button>
-                  </div>
-                ) : (
-                  ""
-                )} */}
-
                 <DataTable
                   autoResetPage={true}
                   onChangePage={(page) => {
-                    // console.log("new Page numbner is", page);
                     setPageNo(page);
                     setEnqData([]);
                     setRefresherNeeded(true);
@@ -517,7 +433,6 @@ function Enquiries() {
                   data={enqData}
                   onChangeRowsPerPage={handlePerRowsChange}
                   selectableRows
-                  onSelectedRowsChange={handleChange}
                   pagination
                   paginationServer
                   progressPending={isLoadingData}

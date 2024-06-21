@@ -1,26 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Form, OverlayTrigger, Popover } from "react-bootstrap";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ColumnFilter from "../../components/Filter/ColumnFilter";
 import LoadingData from "../../components/UI/LoadingData";
 import UiModal from "../../components/UI/UiModal";
 import {
-  ajaxCall,
   ajaxCallWithHeaderOnly,
   ajaxCallWithoutBody,
 } from "../../helpers/ajaxCall";
 import { uiAction } from "../../store/uiStore";
 import OptionFilter from "./OptionFilter";
-import SelectSearch from "react-select-search";
-import { FileUploader } from "react-drag-drop-files";
 import UploadDoc from "../../components/app/UploadDoc";
 import DocumentRow from "../../components/app/DocumentRow";
 import useExportPDF from "../../hook/useExportPDF";
 import ChangeAssignUser from "../../components/enq/ChangeAssignUser";
 import SelectionBox from "../../components/UI/Form/SelectionBox";
-import DupApp from "../../components/app/DupApp";
 import AddedByPopup from "../../components/app/AddedByPopup";
 import CommentPopup from "../../components/enq/CommentPopup";
 import ExportPDF from "../../components/app/ExportPDF";
@@ -43,8 +39,7 @@ const allColumns = [
   { name: "Passport", id: "passport" },
 ];
 
-const parseData = function (response, setModalStatus) {
-  // console.log("response is", response);
+const parseData = function (response) {
   if (response?.results?.length) {
     return response.results.map((data) => {
       const dateObj = new Date(data?.created_at);
@@ -65,8 +60,8 @@ const parseData = function (response, setModalStatus) {
         current_edu: data?.student_info?.name?.current_education,
         status: data?.status?.App_status ? data?.status?.App_status : "-",
         statusId: data?.status?.id,
-        added_by: data?.student_info?.added_by?.username,
-        added_byId: data?.student_info?.added_by?.id,
+        added_by: data?.added_by?.username,
+        added_byId: data?.added_by?.id,
         assigned_users: data.assigned_users?.username
           ? data?.assigned_users?.username
           : "-",
@@ -84,7 +79,7 @@ const parseData = function (response, setModalStatus) {
     });
   } else return [];
 };
-function Applications(props) {
+function Applications() {
   const [enqData, setEnqData] = useState([]);
   const [allEnq, setAllEnq] = useState(true);
   const [searchText, setSearchText] = useState("");
@@ -104,14 +99,7 @@ function Applications(props) {
     enquiry_status: null,
     assigned_usr: null,
   });
-  const [
-    isPDFGenerating,
-    startPDFGenerating,
-    generatedPdfUrl,
-    setPDFData,
-    setGeneratedPdfUrl,
-  ] = useExportPDF();
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [generatedPdfUrl, setGeneratedPdfUrl] = useExportPDF();
   // data table code starts
   const [pageNo, setPageNo] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -124,8 +112,6 @@ function Applications(props) {
     name: null,
   });
   // ref for ref
-  const totalData = useRef();
-  // console.log("page no and per page data is", pageNo, perPage);
 
   const assignedUserFilter = () => {
     setAllEnq((status) => !status);
@@ -134,7 +120,6 @@ function Applications(props) {
   };
 
   const handlePerRowsChange = (newPerPage, page) => {
-    // console.log("per row is changed and data is", newPerPage, page);
     setPerPage(newPerPage);
     setPageNo(page);
     setEnqData([]);
@@ -148,77 +133,70 @@ function Applications(props) {
     id: null,
     name: "",
   });
-  const navigate = useNavigate();
   const deleteAppDetails = useRef({});
 
-  // useEffect(() => {
-  //   if (fileUpload instanceof File) {
-  //   }
-  // }, [fileUpload]);
-  const getAssignUsrData = async function () {
-    const response = await ajaxCallWithHeaderOnly("userlist/", {
-      Authorization: `Bearer ${authData.accessToken}`,
-    });
-    if (response?.isNetwork) {
-      setThrowErr({ ...response, page: "enquiries" });
-      return;
-    }
-    if (response?.status === 401) {
-      setThrowErr({ ...response, page: "enquiries" });
-      return;
-    }
-    if (!response?.length) {
-      setThrowErr({ ...response, page: "enquiries" });
-      return;
-    }
-    setAssignUsrData((data) => {
-      return response.map((option) => {
-        return { value: option.id, name: option.username };
+  const getAssignUsrData = useCallback(
+    async function () {
+      const response = await ajaxCallWithHeaderOnly("userlist/", {
+        Authorization: `Bearer ${authData.accessToken}`,
       });
-    });
-  };
+      if (response?.isNetwork) {
+        setThrowErr({ ...response, page: "enquiries" });
+        return;
+      }
+      if (response?.status === 401) {
+        setThrowErr({ ...response, page: "enquiries" });
+        return;
+      }
+      if (!response?.length) {
+        setThrowErr({ ...response, page: "enquiries" });
+        return;
+      }
+      setAssignUsrData((data) => {
+        return response.map((option) => {
+          return { value: option.id, name: option.username };
+        });
+      });
+    },
+    [authData.accessToken]
+  );
 
-  const getAllStatusData = async function () {
-    const response = await ajaxCallWithHeaderOnly("appstatus/", {
-      Authorization: `Bearer ${authData.accessToken}`,
-    });
-    if (response?.isNetwork) {
-      setThrowErr({ ...response, page: "enquiries" });
-      return;
-    }
-    if (response?.status === 401) {
-      setThrowErr({ ...response, page: "enquiries" });
-      return;
-    }
-    if (!response?.length) {
-      setThrowErr({ ...response, page: "enquiries" });
-      return;
-    }
-    setAllStatus((data) => {
-      return response.map((option) => {
-        return { value: option.id, name: option.App_status };
+  const getAllStatusData = useCallback(
+    async function () {
+      const response = await ajaxCallWithHeaderOnly("appstatus/", {
+        Authorization: `Bearer ${authData.accessToken}`,
       });
-    });
-  };
+      if (response?.isNetwork) {
+        setThrowErr({ ...response, page: "enquiries" });
+        return;
+      }
+      if (response?.status === 401) {
+        setThrowErr({ ...response, page: "enquiries" });
+        return;
+      }
+      if (!response?.length) {
+        setThrowErr({ ...response, page: "enquiries" });
+        return;
+      }
+      setAllStatus((data) => {
+        return response.map((option) => {
+          return { value: option.id, name: option.App_status };
+        });
+      });
+    },
+    [authData.accessToken]
+  );
   // to show the comment popup
   const showComments = function (enqId, name) {
     setShowCommentPopup({ show: true, enqId, name });
   };
+
   const columnsAll = [
     {
       cell: (row) => (
         <>
-          {/* {authData.user_type !== "staff" ? (
-            <DupApp
-              name={row.name}
-              appID={row.id}
-              refresh={setRefresherNeeded}
-            />
-          ) : (
-            ""
-          )} */}
           <ExportPDF data={row} />
-          {/* <Link
+          <Link
             to={`/application/edit/${row.id}`}
             className="enquiryAction"
             title="Edit Application"
@@ -237,14 +215,13 @@ function Applications(props) {
             >
               <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
             </svg>
-          </Link> */}
+          </Link>
           {authData.user_type === "superuser" ? (
             <button
               className="enquiryAction"
               title="Delete Application"
               onClick={() => {
                 promptDelete(row.name, row.id);
-                // deleteEnquiry(row.id);
               }}
             >
               <svg
@@ -318,7 +295,6 @@ function Applications(props) {
     },
     {
       name: "SOP",
-      // selector: (row) => row.Tenth_Marksheet,
       cell: (row) => (
         <DocumentRow
           id={row.id}
@@ -333,7 +309,6 @@ function Applications(props) {
     },
     {
       name: "Offer Letter",
-      // selector: (row) => row.Tenth_Marksheet,
       cell: (row) => (
         <DocumentRow
           id={row.id}
@@ -348,7 +323,6 @@ function Applications(props) {
     },
     {
       name: "Tenth Marksheet",
-      // selector: (row) => row.Tenth_Marksheet,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -363,7 +337,6 @@ function Applications(props) {
     },
     {
       name: "Twelveth Marksheet",
-      // selector: (row) => row.Twelveth_Marksheet,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -379,7 +352,6 @@ function Applications(props) {
     },
     {
       name: "Passport",
-      // selector: (row) => row.passport,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -394,7 +366,6 @@ function Applications(props) {
     },
     {
       name: "Diploma Marksheet",
-      // selector: (row) => row.Diploma_Marksheet,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -409,7 +380,6 @@ function Applications(props) {
     },
     {
       name: "Bachelor Marksheet",
-      // selector: (row) => row.Bachelor_Exam,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -424,7 +394,6 @@ function Applications(props) {
     },
     {
       name: "Master Marksheet",
-      // selector: (row) => row.Master_Marksheet,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -439,7 +408,6 @@ function Applications(props) {
     },
     {
       name: "LOR",
-      // selector: (row) => row.Lor,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -455,7 +423,6 @@ function Applications(props) {
 
     {
       name: "Resume",
-      // selector: (row) => row.Resume,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -470,7 +437,6 @@ function Applications(props) {
     },
     {
       name: "Language Exam",
-      // selector: (row) => row.Language_Exam,
       cell: (row) => (
         <DocumentRow
           id={row.application}
@@ -516,51 +482,51 @@ function Applications(props) {
     authData.user_type === "superuser"
       ? columnsAll
       : columnsAll.filter((col) => col.name !== "Assigned Users");
-  const handleChange = ({ selectedRows }) => {
-    // You can set state or dispatch with something like Redux so we can use the retrieved data
-    // console.log("Selected Rows: ", selectedRows);
-    setSelectedRows(selectedRows);
-  };
 
   useEffect(() => {
     if (enqData.length && !assignUsrData.length) {
       getAssignUsrData();
     }
-  }, [enqData]);
+  }, [assignUsrData.length, enqData, getAssignUsrData]);
 
   useEffect(() => {
     if (enqData.length && !allStatus.length) {
       getAllStatusData();
     }
-  }, [enqData]);
+  }, [allStatus.length, enqData, getAllStatusData]);
 
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
-  const getAppData = async (url) => {
-    setIsLoadingData(true);
-    const response = await ajaxCallWithHeaderOnly(
-      url,
-      {
-        Authorization: `Bearer ${authData.accessToken}`,
-      },
-      "POST",
-      null
-    );
-    if (response?.isNetwork) {
-      setThrowErr({ ...response, page: "applications" });
-      return;
-    }
-    if (response?.status === 401 || response?.status > 500) {
-      setThrowErr({ ...response, page: "applications" });
-      return;
-    }
-    const enqParsed = parseData(response, setModalStatus);
-    setEnqData(enqParsed);
-    setTotalRows(response.count);
-    setIsLoadingData(false);
-    setRefresherNeeded(false);
-  };
+
+  const getAppData = useCallback(
+    async (url) => {
+      setIsLoadingData(true);
+      const response = await ajaxCallWithHeaderOnly(
+        url,
+        {
+          Authorization: `Bearer ${authData.accessToken}`,
+        },
+        "POST",
+        null
+      );
+      if (response?.isNetwork) {
+        setThrowErr({ ...response, page: "applications" });
+        return;
+      }
+      if (response?.status === 401 || response?.status > 500) {
+        setThrowErr({ ...response, page: "applications" });
+        return;
+      }
+      const enqParsed = parseData(response, setModalStatus);
+      setEnqData(enqParsed);
+      setTotalRows(response.count);
+      setIsLoadingData(false);
+      setRefresherNeeded(false);
+    },
+    [authData.accessToken]
+  );
+
   useEffect(() => {
     try {
       if (refreshNeeded && !searchText?.length) {
@@ -577,7 +543,6 @@ function Applications(props) {
             : "";
         getAppData(url);
       }
-      // console.log(response);
     } catch (e) {
       setThrowErr({ e, page: "enquiries" });
       return;
@@ -585,15 +550,25 @@ function Applications(props) {
   }, [
     enqData,
     appFilter.enquiry_status,
+    appFilter.assigned_usr,
+    appFilter.agent_created,
+    appFilter.uni_interested,
+    appFilter.intake_interested,
+    appFilter.level_interested,
     refreshNeeded,
     pageNo,
     perPage,
     searchText,
+    authData.user_type,
+    allEnq,
+    getAppData,
   ]);
+
   const promptDelete = (student_name, deleteId) => {
     setPromptStatus(true);
     deleteAppDetails.current = { name: student_name, id: deleteId };
   };
+
   const deleteApp = async function (deleteId) {
     try {
       setSearchText("");
@@ -605,7 +580,6 @@ function Applications(props) {
         },
         "DELETE"
       );
-      // console.log("response is ", response);
       if (response !== true) {
         setThrowErr({ ...response, page: "applications" });
         return;
@@ -631,6 +605,7 @@ function Applications(props) {
     setSearchText("");
     setRefresherNeeded(true);
   };
+
   const hideModal = () =>
     setModalStatus({
       showModal: false,
@@ -652,6 +627,7 @@ function Applications(props) {
     setRefresherNeeded(true);
     setEnqData([]);
   };
+
   const clearFilter = function () {
     setAppFilter({
       enquiry_status: null,
@@ -681,7 +657,6 @@ function Applications(props) {
   };
 
   useEffect(() => {
-    console.log(generatedPdfUrl);
     if (generatedPdfUrl) {
       try {
         window.open(generatedPdfUrl, "_blank").focus();
@@ -704,42 +679,8 @@ function Applications(props) {
         setGeneratedPdfUrl("");
       }
     }
-  }, [generatedPdfUrl]);
-  const exportPDF = (val) => {
-    if (val === "exp") {
-      if (selectedRows.length > 1) {
-        dispatch(
-          uiAction.setNotification({
-            show: true,
-            heading: "Error",
-            msg: `Please select only 1 application at a time to export as pdf`,
-          })
-        );
-      } else if (!isPDFGenerating) {
-        // window.open(
-        //   `https://smhri.com/oeccrm/pdf/${selectedRows[0].id}/`,
-        //   "_blank"
-        // );
-        startPDFGenerating(true);
-        setPDFData(selectedRows[0]);
-        dispatch(
-          uiAction.setNotification({
-            show: true,
-            heading: `Export PDF`,
-            msg: `Exporting PDF for ${selectedRows[0].name}...`,
-          })
-        );
-      } else {
-        dispatch(
-          uiAction.setNotification({
-            show: true,
-            heading: `Export PDF`,
-            msg: `Can't export more then 1 pdf at a same time, Please wait...`,
-          })
-        );
-      }
-    }
-  };
+  }, [dispatch, generatedPdfUrl, setGeneratedPdfUrl]);
+
   return (
     <>
       <div className="row layout-spacing">
@@ -805,7 +746,6 @@ function Applications(props) {
                 />
                 <DataTable
                   onChangePage={(page) => {
-                    // console.log("new Page numbner is", page);
                     setPageNo(page);
                     setEnqData([]);
                     setRefresherNeeded(true);
@@ -814,7 +754,6 @@ function Applications(props) {
                   columns={columns}
                   data={enqData}
                   selectableRows
-                  onSelectedRowsChange={handleChange}
                   progressPending={isLoadingData}
                   progressComponent={
                     <LoadingData className="loading-spinner-flex" />

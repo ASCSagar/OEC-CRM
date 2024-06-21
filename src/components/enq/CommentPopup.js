@@ -7,7 +7,6 @@ import CommentSnippet from "./CommentSnippet";
 import AddComment from "./AddComment";
 
 function CommentPopup(props) {
-  const [comments, setComments] = useState(-1);
   const [modalStatus, setModalStatus] = useState({
     showModal: true,
     showHeader: true,
@@ -18,12 +17,12 @@ function CommentPopup(props) {
     reset: 0,
   });
   const [throwErr, setThrowErr] = useState(null);
-  const [showInput, setShowInput] = useState({ show: false, id: null });
   const authData = useSelector((state) => state.authStore);
+
   useEffect(() => {
-    console.log("throwing");
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const getComments = async () => {
     const response = await ajaxCallWithHeaderOnly(
       `app/getcomment/?ordering=posted&object_id=${props.id}`,
@@ -33,19 +32,15 @@ function CommentPopup(props) {
       "GET",
       null
     );
-    console.log(response);
     if (response?.isNetwork) {
       setThrowErr({ ...response, page: "enqForm", status: response?.status });
       return;
     }
     if (response?.status && response?.status !== 200) {
-      console.log("i am here");
       setThrowErr({ ...response, page: "enqForm" });
       return;
     }
-    console.log(response?.length);
     if (!response?.length) {
-      console.log("upate", response.length);
       setModalStatus({
         showModal: true,
         showHeader: true,
@@ -93,7 +88,6 @@ function CommentPopup(props) {
 
         transformedComment.unshift(parentComment);
       }
-      console.log("transformed is", transformedComment);
       const bodyContent = (
         <>
           <ul className="parentComment">
@@ -154,6 +148,7 @@ function CommentPopup(props) {
       return;
     }
   }, []);
+
   useEffect(() => {
     try {
       if (modalStatus.reset) getComments();
@@ -162,6 +157,7 @@ function CommentPopup(props) {
       return;
     }
   }, [modalStatus.reset]);
+
   return (
     <UiModal
       setModalStatus={props.onHide}
