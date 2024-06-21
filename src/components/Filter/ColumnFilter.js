@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { appAction } from "../../store/appColumns";
-import { enqAction } from "../../store/EnqColumns";
-// import { uiAction } from "../../store/uiStore";
 
 function ColumnFilter(props) {
   const [columnStatus, setColumnStatus] = useState(false);
   const columnData = useSelector((store) => store[props.filterStore]);
   const dispatch = useDispatch();
-  // console.log(props.allColumns);
+  
   return (
     <>
       <div className="col-lg-12 flex-main">

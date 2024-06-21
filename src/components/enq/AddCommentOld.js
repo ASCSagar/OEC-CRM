@@ -57,7 +57,6 @@ function AddComment(props) {
     if (textBoxStatus.text?.length) {
       sendCommentData(textBoxStatus.text);
       setTextBoxStatus({ show: false, text: null });
-      //   console.log("ajax here", replyInput);
     }
     setTextBoxStatus({ show: false, text: null });
   };

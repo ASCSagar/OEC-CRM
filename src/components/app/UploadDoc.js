@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Popover, Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { FileUploader } from "react-drag-drop-files";
 import { ajaxCall } from "../../helpers/ajaxCall";
 import { useDispatch, useSelector } from "react-redux";
 import { uiAction } from "../../store/uiStore";
 import UiModal from "../UI/UiModal";
-import LoadingData from "../UI/LoadingData";
 
 const UploadDoc = (props) => {
   const [uploading, setUploading] = useState(false);
-  // console.log("id is", id);
   const authData = useSelector((state) => state.authStore);
   const dispatch = useDispatch();
   const [throwErr, setThrowErr] = useState(null);
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const uploadFile = async function (id, file) {
     const fdata = new FormData();
-
     if (file instanceof File) fdata.append(props.uploadKey, file);
     setUploading(true);
     let url = `update-application/${id}/`;
@@ -42,7 +41,6 @@ const UploadDoc = (props) => {
       return;
     }
     if (response?.status === 400 || response?.status > 499) {
-      // setLoadError({ isError: "Please check all form fields and try again" });
       dispatch(
         uiAction.setNotification({
           show: true,
@@ -53,7 +51,6 @@ const UploadDoc = (props) => {
       closeModal();
       return;
     }
-    // setLoadError({ isError: "Please check all form fields and try again" });
     dispatch(
       uiAction.setNotification({
         show: true,
@@ -64,11 +61,10 @@ const UploadDoc = (props) => {
     if (props.uploadKey === "rcvd_offer_letter" || props.uploadKey === "Sop") {
     } else {
       props.setRefresherNeeded(true);
-    } // props.resetApp();
+    }
     props.changeMode((data) => {
       return { ...data, document: response[props.uploadKey], show: false };
     });
-    // closeModal();
     setUploading(false);
   };
 
@@ -77,6 +73,7 @@ const UploadDoc = (props) => {
       return { ...data, show: false };
     });
   };
+
   return (
     <>
       <UiModal
@@ -105,7 +102,6 @@ const UploadDoc = (props) => {
                   handleChange={(file) => {
                     uploadFile(props.id, file);
                   }}
-                  // name={props.fieldName}
                   types={["pdf"]}
                   hoverTitle="Upload Document"
                   minSize={0.00005}
@@ -120,9 +116,6 @@ const UploadDoc = (props) => {
             </>
           )
         }
-        //   showFooter={modalStatus.showFooter}
-        //   footerContent={modalStatus.footerContent}
-        //
       />
     </>
   );

@@ -1,18 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form } from "react-bootstrap";
 import { FileUploader } from "react-drag-drop-files";
-import SideImgForm from "./SideImgForm";
-import { ajaxCall } from "../../../helpers/ajaxCall";
-import { useSelector } from "react-redux";
-// import axios from "axios";
+
 const fileTypes = ["pdf"];
 function FileUpload(props) {
-  // console.log(props.afile);
-  const [file, setFile] = useState(null);
-  // const handleChange = (file) => {
-  //   setFile(file);
-  // };
-  const authData = useSelector((state) => state.authStore);
   const fileName =
     props.isEdit && !(props.afile instanceof File)
       ? props.afile
@@ -23,44 +14,7 @@ function FileUpload(props) {
       : props.afile
       ? `File name: ${props.afile.name}`
       : "No files uploaded yet";
-  // console.log("filee name is", fileName);
 
-  // const onChangeFile = async function (file) {
-  //   const url = `update-application/${props.appId}/`;
-  //   const method = "PATCH";
-  //   const fdata = new FormData();
-  //   fdata.append(props.uploadId, file);
-  //   // const response = await ajaxCall(
-  //   //   url,
-  //   //   {
-  //   //     Authorization: `Bearer ${authData.accessToken}`,
-  //   //   },
-  //   //   method,
-  //   //   fdata
-  //   // );
-  //   // axios
-  //   //   .patch({
-  //   //     url,
-  //   //     data: fdata,
-  //   //     headers: {
-  //   //       "Content-Type": "multipart/form-data",
-  //   //     },
-  //   //     onUploadProgress: (p) => {
-  //   //       console.log(p);
-  //   //       //this.setState({
-  //   //       //fileprogress: p.loaded / p.total
-  //   //       //})
-  //   //     },
-  //   //   })
-  //   //   .then((data) => {
-  //   //     console.log(data);
-  //   //     //this.setState({
-  //   //     //fileprogress: 1.0,
-  //   //     //})
-  //   //   });
-
-  //   // console.log(response);
-  // };
   return (
     <>
       <Form.Group controlId={props.groupId} className={props.groupClassName}>
@@ -85,13 +39,6 @@ function FileUpload(props) {
         <div className="neumorphism-box uploadBox">
           <FileUploader
             handleChange={props.onChange}
-            // handleChange={onChangeFile}
-            onDrop={(file) => {
-              // console.log("file is", file);
-            }}
-            onSelect={(file) => {
-              // console.log("file is", file);
-            }}
             name={props.fieldName}
             types={fileTypes}
             hoverTitle={props.title}

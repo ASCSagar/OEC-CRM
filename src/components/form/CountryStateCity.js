@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Form } from "react-bootstrap";
 import SelectSearch from "react-select-search";
 import { Country, State, City } from "country-state-city";
 
 function CountryStateCity(props) {
-  console.log(props);
-  //   // states for getting country state and city
-  //   const [countries, setCountries] = useState([]);
-  //   const [states, setStates] = useState([]);
-  //   const [Cities, setCities] = useState([]);
-
   // get country list
   const countries = Country.getAllCountries();
 

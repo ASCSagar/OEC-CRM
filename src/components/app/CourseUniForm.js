@@ -17,17 +17,6 @@ const initialState = {
   status: "",
 };
 const reducerFile = (state, action) => {
-  //   if (action?.all) {
-  //     return {
-  //       enqId: action.data.enqId,
-  //       sop: action.data,
-  //       rcvd_offer_letter: null,
-  //       university_interested: "",
-  //       course_interested: "",
-  //       intake_interested: "",
-  //       level_applying_for: "",
-  //     };
-  //   }
   return { ...state, [action.type]: action.value };
 };
 function CourseUniForm(props) {
@@ -96,9 +85,9 @@ function CourseUniForm(props) {
     props.setRefresherNeeded(true);
   };
   const handleChange = (fileName, file) => {
-    // console.log(fileName, file);
     dispatchFunction({ type: fileName, value: file });
   };
+
   return (
     <Form
       className="row"
@@ -120,7 +109,6 @@ function CourseUniForm(props) {
         isSearch={true}
         objKey="univ_name"
       />
-
       <SelectionBox
         groupClass={`mb-3  selectbox ${props.clssName}`}
         groupId="intakeInterested"
@@ -137,7 +125,6 @@ function CourseUniForm(props) {
         isSearch={true}
         objKey="it's different"
       />
-
       <SelectionBox
         label="Level Applying For"
         groupClass={`mb-3  selectbox ${props.clssName}`}
@@ -154,7 +141,6 @@ function CourseUniForm(props) {
         isSearch={true}
         objKey="levels"
       />
-
       <SelectionBox
         groupClass={`mb-3  selectbox ${props.clssName}`}
         groupId="courseIntersted"
@@ -193,7 +179,6 @@ function CourseUniForm(props) {
         maxUploadSize="10"
         afile={fileData.sop}
       />
-
       <FileUpload
         appId={props.appId}
         uploadId="rcvd_offer_letter"

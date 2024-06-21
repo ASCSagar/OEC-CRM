@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from "react";
 import { useState } from "react";
-import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Password from "../components/UI/Password";
@@ -80,7 +80,6 @@ function UserProfile() {
       });
       return;
     }
-    console.log("response is ", response);
     if (response.msg === "Password changed")
       dispatch(
         uiAction.setNotification({

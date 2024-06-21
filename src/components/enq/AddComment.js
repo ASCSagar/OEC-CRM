@@ -20,16 +20,13 @@ function AddComment(props) {
       return { ...textBoxStatus, show: false };
     });
   };
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const sendCommentData = async function (input, file) {
     setSubmitting(true);
-    const data = {
-      object_id: props.enqId,
-      content: input,
-      uploaded_file: null,
-    };
     const formData = new FormData();
     formData.append("object_id", props.enqId);
     formData.append("content", input);
@@ -43,7 +40,6 @@ function AddComment(props) {
       "POST",
       formData
     );
-    console.log(response);
     if (response?.isNetwork) {
       setThrowErr({ ...response, page: "enqForm" });
       return;
@@ -71,8 +67,6 @@ function AddComment(props) {
     e.preventDefault();
     if (textBoxStatus.text?.length || textBoxStatus.upload instanceof File) {
       sendCommentData(textBoxStatus.text, textBoxStatus.upload);
-
-      //   console.log("ajax here", replyInput);
     } else {
       dispatch(
         uiAction.setNotification({
@@ -84,6 +78,7 @@ function AddComment(props) {
       setTextBoxStatus({ show: false, text: null, upload: null });
     }
   };
+
   return (
     <div className="text-center">
       {textBoxStatus.show ? (
@@ -103,7 +98,6 @@ function AddComment(props) {
               }
               autoFocus
               placeholder="Add Comment"
-              // onBlur={addComment}
             />
           </Form.Group>
           <div className="col-md-6">
@@ -113,15 +107,7 @@ function AddComment(props) {
                   return { ...oldData, show: true, upload: file };
                 });
               }}
-              // handleChange={onChangeFile}
-              onDrop={(file) => {
-                // console.log("file is", file);
-              }}
-              onSelect={(file) => {
-                // console.log("file is", file);
-              }}
               name={props.fieldName}
-              // types={fileTypes}
               hoverTitle={props.title}
               minSize={0.0005}
               maxSize={0.5}

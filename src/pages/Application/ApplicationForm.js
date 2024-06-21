@@ -311,218 +311,203 @@ function ApplicationForm(props) {
   if (loadError.isLoading) return <LoadingData className="loading-spinner" />;
 
   return (
-    <>
-      <div className="row">
-        <div id="tabsSimple" className={`layout-spacing col-md-12`}>
-          <div className="row">
-            <div className="col-md-6">
-              <div className="neumorphism-box">
-                <div className="statbox box box-shadow">
-                  <div className="widget-header">
-                    <div className="row">
-                      <div className="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>{props.title}</h4>
-                      </div>
+    <div className="row">
+      <div id="tabsSimple" className={`layout-spacing col-md-12`}>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="neumorphism-box">
+              <div className="statbox box box-shadow">
+                <div className="widget-header">
+                  <div className="row">
+                    <div className="col-xl-12 col-md-12 col-sm-12 col-12">
+                      <h4>{props.title}</h4>
                     </div>
                   </div>
-
-                  <div className="widget-content widget-content-area">
-                    <div className="row">
-                      <SelectionBox
-                        disabled={props.edit}
-                        groupClass={`mb-3 selectbox`}
-                        groupId="enqId"
-                        label="Name"
-                        value={fileData.enqId}
-                        onChange={handleChange.bind(null, "enqId")}
-                        name="enqId"
-                        url={
-                          props.edit
-                            ? fileData.enqId
-                              ? `view-enquiry/?id=${fileData.enqId}`
-                              : ""
-                            : `view-enquiry/`
-                        }
-                        isSearch={true}
-                        objKey="student_name"
+                </div>
+                <div className="widget-content widget-content-area">
+                  <div className="row">
+                    <SelectionBox
+                      disabled={props.edit}
+                      groupClass={`mb-3 selectbox`}
+                      groupId="enqId"
+                      label="Name"
+                      value={fileData.enqId}
+                      onChange={handleChange.bind(null, "enqId")}
+                      name="enqId"
+                      url={
+                        props.edit
+                          ? fileData.enqId
+                            ? `view-enquiry/?id=${fileData.enqId}`
+                            : ""
+                          : `view-enquiry/`
+                      }
+                      isSearch={true}
+                      objKey="student_name"
+                    />
+                    <div className="row ">
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="passport"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "passport")}
+                        groupId="passport"
+                        groupClassName="mb-3 dragDropUpload col-md-4"
+                        label="Passport"
+                        fieldName="passportIP"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.passport}
                       />
-                      <div className="row ">
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="passport"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(null, "passport")}
-                          groupId="passport"
-                          groupClassName="mb-3 dragDropUpload col-md-4"
-                          label="Passport"
-                          fieldName="passportIP"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.passport}
-                        />
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="Tenth_Marksheet"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(null, "tenthMarksheet")}
-                          groupId="tenthMarksheet"
-                          groupClassName="mb-3 col-md-4 dragDropUpload"
-                          label="10th Marksheet"
-                          fieldName="tenthMarksheetIp"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.tenthMarksheet}
-                        />
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="Twelveth_Marksheet"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(
-                            null,
-                            "twelvethMarksheet"
-                          )}
-                          groupId="twelthMarksheet"
-                          groupClassName="mb-3  dragDropUpload col-md-4"
-                          label="12th Marksheet"
-                          fieldName="twelthMarksheetIp"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.twelvethMarksheet}
-                        />
-
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="Resume"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(null, "resume")}
-                          groupId="resumeFile"
-                          groupClassName="mb-3 dragDropUpload col-md-6"
-                          label="Resume"
-                          fieldName="resumeFileIp"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.resume}
-                        />
-
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="Lor"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(null, "lor")}
-                          groupId="lorFile"
-                          groupClassName="mb-3  dragDropUpload col-md-6"
-                          label="Lor"
-                          fieldName="lorFileIp"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.lor}
-                        />
-                        <hr />
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="Diploma_Marksheet"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(null, "diplomaMarksheet")}
-                          groupId="diplomaMarksheet"
-                          groupClassName="mb-3  dragDropUpload col-md-6"
-                          label="Diploma Marksheet"
-                          fieldName="diplomaMarksheetIp"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.diplomaMarksheet}
-                        />
-
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="Bachelor_Marksheet"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(
-                            null,
-                            "bachelorMarksheet"
-                          )}
-                          groupId="bachlorMarksheet"
-                          groupClassName="mb-3  dragDropUpload col-md-6"
-                          label="Bachelor Marksheet"
-                          fieldName="bachlorMarksheetIp"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.bachelorMarksheet}
-                        />
-
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="Master_Marksheet"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(null, "masterMarksheet")}
-                          groupId="masterMarksheet"
-                          groupClassName="mb-3  dragDropUpload col-md-6"
-                          label="Master Marksheet"
-                          fieldName="masterMarksheetIp"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.masterMarksheet}
-                        />
-
-                        <FileUpload
-                          appId={props.appId}
-                          uploadId="Language_Exam"
-                          isEdit={props.edit}
-                          onChange={handleChange.bind(null, "languageExam")}
-                          groupId="languageExam"
-                          groupClassName="mb-3 dragDropUpload col-md-6"
-                          label="Language Exam"
-                          fieldName="languageExamIp"
-                          minUploadSize="0.005"
-                          maxUploadSize="10"
-                          afile={fileData.languageExam}
-                        />
-                      </div>
-
-                      <div className="col-md-12">
-                        <Button
-                          variant="primary"
-                          type="submit"
-                          onClick={submitApp}
-                          disabled={loadError.isSubmitting}
-                        >
-                          {loadError.isSubmitting ? "Submitting" : "Submit"}
-                        </Button>
-                        {loadError.isError ? (
-                          <p className="dengor">{loadError.isError}</p>
-                        ) : (
-                          ""
-                        )}
-                      </div>
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="Tenth_Marksheet"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "tenthMarksheet")}
+                        groupId="tenthMarksheet"
+                        groupClassName="mb-3 col-md-4 dragDropUpload"
+                        label="10th Marksheet"
+                        fieldName="tenthMarksheetIp"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.tenthMarksheet}
+                      />
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="Twelveth_Marksheet"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "twelvethMarksheet")}
+                        groupId="twelthMarksheet"
+                        groupClassName="mb-3  dragDropUpload col-md-4"
+                        label="12th Marksheet"
+                        fieldName="twelthMarksheetIp"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.twelvethMarksheet}
+                      />
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="Resume"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "resume")}
+                        groupId="resumeFile"
+                        groupClassName="mb-3 dragDropUpload col-md-6"
+                        label="Resume"
+                        fieldName="resumeFileIp"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.resume}
+                      />
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="Lor"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "lor")}
+                        groupId="lorFile"
+                        groupClassName="mb-3  dragDropUpload col-md-6"
+                        label="Lor"
+                        fieldName="lorFileIp"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.lor}
+                      />
+                      <hr />
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="Diploma_Marksheet"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "diplomaMarksheet")}
+                        groupId="diplomaMarksheet"
+                        groupClassName="mb-3  dragDropUpload col-md-6"
+                        label="Diploma Marksheet"
+                        fieldName="diplomaMarksheetIp"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.diplomaMarksheet}
+                      />
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="Bachelor_Marksheet"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "bachelorMarksheet")}
+                        groupId="bachlorMarksheet"
+                        groupClassName="mb-3  dragDropUpload col-md-6"
+                        label="Bachelor Marksheet"
+                        fieldName="bachlorMarksheetIp"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.bachelorMarksheet}
+                      />
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="Master_Marksheet"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "masterMarksheet")}
+                        groupId="masterMarksheet"
+                        groupClassName="mb-3  dragDropUpload col-md-6"
+                        label="Master Marksheet"
+                        fieldName="masterMarksheetIp"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.masterMarksheet}
+                      />
+                      <FileUpload
+                        appId={props.appId}
+                        uploadId="Language_Exam"
+                        isEdit={props.edit}
+                        onChange={handleChange.bind(null, "languageExam")}
+                        groupId="languageExam"
+                        groupClassName="mb-3 dragDropUpload col-md-6"
+                        label="Language Exam"
+                        fieldName="languageExamIp"
+                        minUploadSize="0.005"
+                        maxUploadSize="10"
+                        afile={fileData.languageExam}
+                      />
+                    </div>
+                    <div className="col-md-12">
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        onClick={submitApp}
+                        disabled={loadError.isSubmitting}
+                      >
+                        {loadError.isSubmitting ? "Submitting" : "Submit"}
+                      </Button>
+                      {loadError.isError ? (
+                        <p className="dengor">{loadError.isError}</p>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            {fileData.enqId ? (
-              <div className="col-md-6">
-                <div className="neumorphism-box">
-                  <ApplicantDetails
-                    enqId={fileData.enqId}
-                    sop={fileData.sop}
-                    rcvd_offer_letter={fileData.rcvd_offer_letter}
-                    university_interested={fileData.university_interested}
-                    course_interested={fileData.course_interested}
-                    intake_interested={fileData.intake_interested}
-                    level_applying_for={fileData.level_applying_for}
-                    dispatchFunction={dispatchFile}
-                    handleChange={handleChange}
-                    assignedUser={fileData.assignedUser}
-                    status={fileData.status}
-                  />
-                </div>
-              </div>
-            ) : (
-              ""
-            )}
           </div>
+          {fileData.enqId ? (
+            <div className="col-md-6">
+              <div className="neumorphism-box">
+                <ApplicantDetails
+                  enqId={fileData.enqId}
+                  sop={fileData.sop}
+                  rcvd_offer_letter={fileData.rcvd_offer_letter}
+                  university_interested={fileData.university_interested}
+                  course_interested={fileData.course_interested}
+                  intake_interested={fileData.intake_interested}
+                  level_applying_for={fileData.level_applying_for}
+                  dispatchFunction={dispatchFile}
+                  handleChange={handleChange}
+                  assignedUser={fileData.assignedUser}
+                  status={fileData.status}
+                />
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -15,7 +15,6 @@ function ExportPDF(props) {
 
   // for generated pdf
   useEffect(() => {
-    console.log(generatedPdfUrl);
     if (generatedPdfUrl) {
       try {
         window.open(generatedPdfUrl, "_blank").focus();

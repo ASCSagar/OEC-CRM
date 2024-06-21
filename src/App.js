@@ -13,7 +13,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import Register from "./pages/Register";
 import Base from "./components/Base";
 import EditEnquiry from "./pages/Enquiry/EditEnquiry";
 import Enquiries from "./pages/Enquiry/Enquiries";
@@ -118,15 +117,6 @@ const router = createBrowserRouter(
       element: (
         <AuthRoot>
           <Login />
-        </AuthRoot>
-      ),
-      errorElement: <ErrorPage />,
-    },
-    {
-      path: "register",
-      element: (
-        <AuthRoot>
-          <Register />
         </AuthRoot>
       ),
       errorElement: <ErrorPage />,

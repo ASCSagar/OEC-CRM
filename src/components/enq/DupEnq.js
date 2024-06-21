@@ -28,21 +28,13 @@ function DupEnq(props) {
       "POST",
       JSON.stringify(enqData)
     );
-    console.log(response);
     if (response?.isNetwork) {
-      //   setThrowErr({ ...response, page: "enqForm" });
       return;
     }
     if (response?.status === 401 || response?.status === 204) {
-      //   setThrowErr({ ...response, page: "enqForm" });
       return;
     }
     if (response?.status === 400) {
-      //   setLoadError({
-      //     isLoading: false,
-      //     isSubmitting: false,
-      //     isError: "Please check all form fields and try again",
-      //   });
       return;
     }
     dispatch(
@@ -60,7 +52,6 @@ function DupEnq(props) {
       title="Copy Enquiry"
       onClick={() => {
         dupEnq();
-        // navigate(`/enquiry/edit/${row.id}`);
       }}
     >
       <svg

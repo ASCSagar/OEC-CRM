@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Form, OverlayTrigger, Popover } from "react-bootstrap";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 import SelectSearch from "react-select-search";
 import { ajaxCall } from "../../helpers/ajaxCall";
 import { useDispatch, useSelector } from "react-redux";
 import { uiAction } from "../../store/uiStore";
 
 function ChangeStatus(props) {
-  const [isEditMode, setEditMode] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [data, setData] = useState({
     name: props.name,
@@ -14,9 +13,11 @@ function ChangeStatus(props) {
   });
   const [throwErr, setThrowErr] = useState(null);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const authData = useSelector((state) => state.authStore);
   const changeData = async function (val, data) {
     setIsUpdating(true);
@@ -57,12 +58,6 @@ function ChangeStatus(props) {
       return;
     }
     if (response?.status === 400) {
-      // setLoadError({
-      //   isLoading: false,
-      //   isSubmitting: false,
-      //   isError: "Please check all form fields and try again",
-      // });
-      // return;
     }
     if (response.status === val) {
       setData({ name: data.name, val });

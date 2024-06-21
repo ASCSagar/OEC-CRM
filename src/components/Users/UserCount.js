@@ -10,9 +10,11 @@ function UserCount() {
   const [loadingData, setLoadingData] = useState(true);
 
   const [throwErr, setThrowErr] = useState(null);
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const authData = useSelector((state) => state.authStore);
   const userCountData = async () => {
     try {
@@ -37,7 +39,6 @@ function UserCount() {
         return;
       }
       setLoadingData(false);
-      //   console.log(response);
       setData({
         totalApp: response.total_applications,
         totalEnq: response.total_enquiries,
@@ -47,12 +48,15 @@ function UserCount() {
       return;
     }
   };
+
   useEffect(() => {
     userCountData();
   }, []);
+
   if (loadingData) {
     return <LoadingData className="text-center" />;
   }
+  
   return (
     <>
       <div className="col-md-6">

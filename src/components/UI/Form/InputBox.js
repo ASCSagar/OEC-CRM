@@ -2,7 +2,6 @@ import React from "react";
 
 function InputBox(props) {
   const inputChangeHandler = function (e) {
-    // console.log("value is synced", props.value);
     props.onChange({ type: props.reducerName, value: e.target.value });
   };
   return (

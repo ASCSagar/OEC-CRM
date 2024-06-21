@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   authenticateUser,
@@ -11,16 +11,12 @@ import LoadingData from "./UI/LoadingData";
 export default function AuthRoot(props) {
   const dispath = useDispatch();
   const authData = useSelector((state) => state.authStore);
-  // console.log("auth data is", authData);
-  // console.log("i am running login route");
-  const location = useLocation();
+
   useEffect(() => {
-    // console.log("i am running protecteed route useeffect");
     if (!authData.loggedIn) {
       const checkAuth = async () => {
         const localData = getFromLocalStorage("loginInfo", true);
         if (localData == -1) {
-          // console.log("logged out now");
           dispath(
             authAction.setAuthStatus({
               userName: "",
@@ -39,7 +35,6 @@ export default function AuthRoot(props) {
           localData.timeOfLogin,
           localData.refreshToken
         );
-        // console.log("here response is", response);
         if (response === -1) {
           dispath(
             authAction.setAuthStatus({
@@ -53,11 +48,9 @@ export default function AuthRoot(props) {
               logInOperation: 0,
             })
           );
-          // console.log("i am returning");
           return;
         }
         if (response === true) {
-          // console.log("dispatching it");
           dispath(
             authAction.setAuthStatus({
               userName: localData.userName,
@@ -72,7 +65,6 @@ export default function AuthRoot(props) {
           );
           const timeDiff = Date.now() - localData.timeOfLogin;
           setTimeout(() => {
-            // console.log("time difference in ms is", timeDiff);
             dispath(
               authAction.setAuthStatus({
                 userName: "",
@@ -88,7 +80,6 @@ export default function AuthRoot(props) {
           }, timeDiff);
           return;
         }
-        // console.log("response is ", response?.access.length);
         if (!response?.access.length) {
           dispath(
             authAction.setAuthStatus({
@@ -111,7 +102,6 @@ export default function AuthRoot(props) {
           timeOfLogin: localData.timeOfLogin,
           userName: localData.userName,
         };
-        // console.log("localobj is", localObj);
         setToLocalStorage("loginInfo", localObj, true);
         dispath(
           authAction.setAuthStatus({

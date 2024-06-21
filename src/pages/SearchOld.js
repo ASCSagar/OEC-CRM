@@ -1,7 +1,6 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Form, OverlayTrigger, Popover, ProgressBar } from "react-bootstrap";
 import SelectionBox from "../components/UI/Form/SelectionBox";
-import LoaderUni from "../components/UI/Layouts/LoaderUni";
 import { ajaxCallWithHeaderOnly } from "../helpers/ajaxCall";
 import { useSelector } from "react-redux";
 import DataTable from "react-data-table-component";
@@ -56,8 +55,6 @@ const reducer = (state, action) => {
     isAll = isAll && (state.ielts || state.toefl || state.pte);
     isAll = isAll && state.intakeId;
     isAll = isAll && state.levelId && state.cSearch;
-    console.log("isall now", isAll);
-    // console.log("is All is", isAll);
     isAll = isAll ? 1 : 0;
     if (load) {
       const remainSteps = 4 - load / 25;
@@ -98,7 +95,6 @@ function Search() {
   const [totalRows, setTotalRows] = useState(0);
 
   const handlePerRowsChange = (newPerPage, page) => {
-    // console.log("per row is changed and data is", newPerPage, page);
     setPerPage(newPerPage);
     setPageNo(page);
     setUniData([]);
@@ -106,11 +102,12 @@ function Search() {
   // pagination over
   const [uniState, dispatchUniState] = useReducer(reducer, initialState);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const authData = useSelector((state) => state.authStore);
-  const filter = useRef();
 
   const goToEnqPage = function (uniId, courseId) {
     navigate("/enquiry/create", {
@@ -123,7 +120,7 @@ function Search() {
       },
     });
   };
-  // const isAll = uniState.ielts || uniState.ielts || uniState.ielts;
+
   const uniColumns = [
     {
       name: "University Name",
@@ -161,7 +158,6 @@ function Search() {
       "POST",
       null
     );
-    console.log(response);
     if (response?.isNetwork) {
       setThrowErr({ ...response, page: "enquiries" });
       return;
@@ -192,7 +188,6 @@ function Search() {
     });
   };
   useEffect(() => {
-    console.log(uniState.isAll && uniState.refresh);
     try {
       if (uniState.isAll) getData();
     } catch (e) {
@@ -212,8 +207,6 @@ function Search() {
     pageNo,
   ]);
   const selectValueChanged = function (typeId, typeName, val, name) {
-    // console.log(val);
-    // console.log(name);
     if (name) {
       dispatchUniState({
         type: typeId,
@@ -245,24 +238,6 @@ function Search() {
             }
           />
         </Form.Group>
-      </Popover.Body>
-    </Popover>
-  );
-
-  const popoverUni = (
-    <Popover id="popoverUni">
-      <Popover.Body>
-        <SelectionBox
-          groupClass="mb-3 col-md-12 selectbox"
-          groupId="uniChange"
-          label=""
-          // value={uniState.university.id}
-          onChange={selectValueChanged.bind(null, "university")}
-          name="currentEdu"
-          url="get/universities/"
-          isSearch={true}
-          objKey="univ_name"
-        />
       </Popover.Body>
     </Popover>
   );
@@ -487,25 +462,8 @@ function Search() {
         <div class="col-lg-12">
           {uniState.isAll ? (
             <>
-              {/* <div className="row nomp">
-                <SelectionBox
-                  groupClass="mb-3 col-md-3 selectbox"
-                  groupId="uniFilter"
-                  label="Filter Courses By Universities"
-                  // onChange={props.filterSelectionChanged.bind(
-                  //   null,
-                  //   "university_interested"
-                  // )}
-                  // value={props.enqFilter.university_interested}
-                  name="uniFilter"
-                  url={`courses/universities/${uniState.filter}`}
-                  isSearch={true}
-                  objKey="univ_name"
-                />
-              </div> */}
               <DataTable
                 onChangePage={(page) => {
-                  // console.log("new Page numbner is", page);
                   setPageNo(page);
                   setUniData([]);
                 }}

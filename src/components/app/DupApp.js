@@ -1,5 +1,5 @@
 import React from "react";
-import { ajaxCall, ajaxCallWithHeaderOnly } from "../../helpers/ajaxCall";
+import { ajaxCallWithHeaderOnly } from "../../helpers/ajaxCall";
 import { useDispatch, useSelector } from "react-redux";
 import { uiAction } from "../../store/uiStore";
 
@@ -17,19 +17,12 @@ function DupApp(props) {
     );
     console.log(response);
     if (response?.isNetwork) {
-      //   setThrowErr({ ...response, page: "enqForm" });
       return;
     }
     if (response?.status === 401 || response?.status === 204) {
-      //   setThrowErr({ ...response, page: "enqForm" });
       return;
     }
     if (response?.status === 400) {
-      //   setLoadError({
-      //     isLoading: false,
-      //     isSubmitting: false,
-      //     isError: "Please check all form fields and try again",
-      //   });
       return;
     }
     dispatch(
@@ -41,13 +34,13 @@ function DupApp(props) {
     );
     props.refresh(true);
   };
+  
   return (
     <button
       className="enquiryAction"
       title="Copy Application"
       onClick={() => {
         dupApplication();
-        // navigate(`/enquiry/edit/${row.id}`);
       }}
     >
       <svg

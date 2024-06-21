@@ -11,9 +11,11 @@ function ApplicantDetails(props) {
   const [data, setData] = useState([]);
   const authData = useSelector((state) => state.authStore);
   const [throwErr, setThrowErr] = useState(null);
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const getEnqdata = async () => {
     const response = await ajaxCallWithHeaderOnly(
       `enquiries/${props.enqId}/`,
@@ -23,7 +25,6 @@ function ApplicantDetails(props) {
       "POST",
       null
     );
-    // console.log(response);
     if (response?.isNetwork) {
       setThrowErr({ ...response, page: "enqForm" });
       return;
@@ -49,9 +50,11 @@ function ApplicantDetails(props) {
       getEnqdata();
     }
   }, [props.enqId]);
+
   if (isLoading) {
     return <LoadingData className="text-center" />;
   }
+
   return (
     <div className="applicantDetailsApp">
       <h2 className="mb-3 text-center">Applicant Details</h2>
@@ -83,8 +86,6 @@ function ApplicantDetails(props) {
       <span>Enquiry Date</span> :
       <span>{data.date_created.split("-").reverse().join("-")}</span>
       <span>University Interested</span> :
-      {/* <span>{data.university_interested?.univ_name}</span>
-       */}
       <span>
         {
           <SelectionBox
@@ -105,8 +106,6 @@ function ApplicantDetails(props) {
         }
       </span>
       <span>Intake Interested</span> :
-      {/* <span>{data.course_interested?.course_name}</span>
-       */}
       <span>
         {
           <SelectionBox
@@ -128,8 +127,6 @@ function ApplicantDetails(props) {
       </span>
       <span>Level Applying For</span> :
       <span>
-        {/* {data.intake_interested?.intake_month}{" "}
-        {data.intake_interested?.intake_year} */}
         <SelectionBox
           groupClass="mb-3 col-md-12 selectbox"
           groupId="levelApplying"
