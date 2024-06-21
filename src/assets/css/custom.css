@@ -183,12 +183,18 @@
 .dengor {
   color: #ff0000;
 }
+.greenClr {
+  color: green;
+}
 
 .logo-login {
   width: 350px;
   height: auto;
 }
 
+.logo-register {
+  width: 200px;
+}
 .logout-container {
   display: flex;
   gap: 10px;
@@ -200,7 +206,7 @@
   text-align: center;
   font-size: 16px;
 }
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1142px) {
   .logo-login {
     width: 150px;
     height: auto;
@@ -272,12 +278,6 @@
 .select-search-options {
   margin: 0;
   padding: 0;
-}
-
-.select-search-option {
-  height: auto !important;
-  min-height: 20px;
-  padding: 4px 16px 0 16px;
 }
 #sidebar .theme-brand,
 .sidebar-theme {
@@ -444,7 +444,8 @@ p.nav-link {
   .select-search-input,
 .select-search-container:not(.select-search-is-disabled)
   .select-search-input:hover,
-.select-search-has-focus .select-search-select {
+.select-search-has-focus .select-search-select,
+.uniListOptions {
   /* border-color: #0097b2 !important; */
   border: 1px solid #0097b2 !important;
 }
@@ -662,6 +663,7 @@ p.nav-link {
   /* flex-direction: column; */
   flex: 1;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .flexCols .text-center {
@@ -872,4 +874,74 @@ p.nav-link {
 
 .borderLeft {
   border-left: 1px solid #0097b2;
+}
+.mb-3.noMPC {
+  /* margin-bottom: 0 !important; */
+}
+@media only screen and (max-width: 1142px) {
+  .applicantDetailsApp div {
+    grid-column: 1 / -1;
+  }
+  .ml30.noMmob {
+    margin-left: 0 !important;
+  }
+  #sidebar .theme-brand div.theme-text a {
+    font-size: 20px !important;
+  }
+}
+
+@media only screen and (max-width: 381px) {
+  .applicantDetailsApp {
+    font-size: 12px;
+  }
+}
+
+.sc-jIBmdK.gVnWMo {
+  border: none !important;
+}
+.sc-cCzKKE.lfxhVC {
+  display: none !important;
+}
+
+.shortcutBox .statbox.box.box-shadow {
+  border: 1px solid #0097b2 !important;
+  border-radius: 8px;
+}
+.shortcutBox p {
+  font-weight: 700;
+}
+
+.sc-dmXXqC.dLPHLX,
+.sc-dmXXqC.bnfnvc {
+  border-radius: 8px;
+}
+
+.popupImg {
+  max-width: 250px !important;
+  display: block;
+  margin: auto;
+}
+
+/* this is for data table show all things  */
+
+.kRxGNK,
+.kQSsar div {
+  overflow: unset !important;
+  white-space: normal !important;
+  text-overflow: unset !important;
+}
+/* its over */
+
+.popoverChangeStatus {
+  max-width: 100%;
+}
+
+.broadcastFixedHeight {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.select-search-option {
+  height: auto !important;
+  margin-bottom: 15px !important;
 }
