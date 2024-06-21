@@ -40,6 +40,11 @@ function NavBar(props) {
                 />
               </NavLink>
             </div>
+            <div className="nav-item theme-text">
+              <NavLink to="/" className="nav-link">
+                Overseas Education Center
+              </NavLink>
+            </div>
           </div>
           <div className="nav-item sidebar-toggle">
             <div

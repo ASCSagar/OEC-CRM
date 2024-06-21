@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import LoadingData from "../../components/UI/LoadingData";
 import { useNavigate } from "react-router-dom";
 import { uiAction } from "../../store/uiStore";
-import Applications from "./Applications";
 import ApplicantDetails from "./ApplicantDetails";
+
 const initialState = {
   enqId: null,
   tenthMarksheet: null,
@@ -72,12 +72,13 @@ function ApplicationForm(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleChange = (fileName, file) => {
-    // console.log(fileName, file);
     dispatchFile({ type: fileName, value: file });
   };
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const data = async () => {
     const response = await ajaxCallWithHeaderOnly(
       `get/courseinfo/?courseinfo_id=${props.appId}`,
@@ -99,11 +100,8 @@ function ApplicationForm(props) {
       setThrowErr({ ...response, status: 204, page: "appForm" });
       return;
     }
-
-    // console.log(response);
     setAppData(response.results[0]);
     const mainResponse = response.results[0];
-    console.log(mainResponse);
     dispatchFile({
       all: true,
       data: {
@@ -212,7 +210,6 @@ function ApplicationForm(props) {
         isError: false,
         isSubmitting: true,
       });
-      // console.log(fileData);
 
       const fdata = new FormData();
       fdata.append("name", fileData.enqId);
@@ -305,11 +302,6 @@ function ApplicationForm(props) {
           })
         );
       navigate(`/applications/`);
-
-      // } else {
-      //   setThrowErr({ ...response, general: true, page: "enqForm" });
-      //   return;
-      // }
     } catch (e) {
       setThrowErr({ e, page: "enquiries" });
       return;
@@ -317,7 +309,6 @@ function ApplicationForm(props) {
   };
 
   if (loadError.isLoading) return <LoadingData className="loading-spinner" />;
-  // const optionCols = props.edit ? "col-md-8" : "col-md-4";
 
   return (
     <>

@@ -1,20 +1,10 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import {
-  Form,
-  InputGroup,
-  OverlayTrigger,
-  Popover,
-  ProgressBar,
-} from "react-bootstrap";
-import SelectionBox from "../components/UI/Form/SelectionBox";
-import LoaderUni from "../components/UI/Layouts/LoaderUni";
+import React, { useEffect, useState } from "react";
+import { Form } from "react-bootstrap";
 import { ajaxCallWithHeaderOnly } from "../helpers/ajaxCall";
 import { useSelector } from "react-redux";
 import DataTable from "react-data-table-component";
 import LoadingData from "../components/UI/LoadingData";
-import { useNavigate } from "react-router-dom";
 import CourseLists from "../components/University/CourseLists";
-// import CourseLists from "../components/University/CourseLists";
 
 function University() {
   const [throwErr, setThrowErr] = useState(null);
@@ -34,30 +24,21 @@ function University() {
   });
 
   const handlePerRowsChange = (newPerPage, page) => {
-    // console.log("per row is changed and data is", newPerPage, page);
     setPerPage(newPerPage);
     setPageNo(page);
     setUniData([]);
   };
   // pagination over
 
-  const navigate = useNavigate();
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
   const authData = useSelector((state) => state.authStore);
-  const filter = useRef();
 
   const goToCoursePage = function (uniId, courseType) {
     setLoadCourse({ loadCourse: true, uniId, type: courseType });
-    console.log("time to load courses");
-    // navigate("/enquiry/create", {
-    //   state: {
-    //     uniId,
-    //   },
-    // });
   };
-  // const isAll = uniState.ielts || uniState.ielts || uniState.ielts;
+
   const uniColumns = [
     {
       name: "University Name",
@@ -100,7 +81,6 @@ function University() {
       "POST",
       null
     );
-    console.log(response);
     if (response?.isNetwork) {
       setThrowErr({ ...response, page: "enquiries" });
       return;
@@ -114,15 +94,6 @@ function University() {
       return;
     }
     if (response?.results?.length > 0) {
-      // const data = response.results.map((data) => {
-      //   return {
-      //     ...data,
-      //     uniId: data?.id,
-      //     univ: data?.course_name,
-      //     uniId: data?.university?.id,
-      //     uniName: data?.university?.univ_name,
-      //   };
-      // });
       setTotalRows(response.count);
       setUniData(response?.results);
     } else {
@@ -140,6 +111,7 @@ function University() {
       return;
     }
   }, [perPage, pageNo, searchUni]);
+
   return (
     <div className="row layout-spacing">
       <div className="neumorphism-box nmb">
@@ -165,7 +137,6 @@ function University() {
               </Form.Group>
               <DataTable
                 onChangePage={(page) => {
-                  // console.log("new Page numbner is", page);
                   setPageNo(page);
                   setUniData([]);
                 }}

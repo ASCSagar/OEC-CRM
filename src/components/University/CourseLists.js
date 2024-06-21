@@ -15,11 +15,12 @@ function CourseLists(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [throwErr, setThrowErr] = useState(null);
   const authData = useSelector((state) => state.authStore);
+
   useEffect(() => {
     if (throwErr) throw throwErr;
   }, [throwErr]);
+
   const getData = async function () {
-    console.log("i am inside");
     setIsLoading(true);
     let courseUrl = `uni-retrieve/${props.uniId}/?level=${props.courseLevel}`;
     if (searchCourse?.length) courseUrl += `&course_name=${searchCourse}`;
@@ -31,7 +32,6 @@ function CourseLists(props) {
       "POST",
       null
     );
-    console.log(response);
     if (response?.isNetwork) {
       setThrowErr({ ...response, page: "enquiries" });
       return;
@@ -44,16 +44,6 @@ function CourseLists(props) {
       setThrowErr({ ...response, page: "enquiries" });
       return;
     }
-
-    // const data = response.results.map((data) => {
-    //   return {
-    //     ...data,
-    //     uniId: data?.id,
-    //     univ: data?.course_name,
-    //     uniId: data?.university?.id,
-    //     uniName: data?.university?.univ_name,
-    //   };
-    // });
     setCourseData({
       totalCourse: response?.university_count,
       img: response?.univ_logo,
@@ -62,12 +52,11 @@ function CourseLists(props) {
 
     setIsLoading(false);
   };
-  // load courses
+  
   useEffect(() => {
     getData();
   }, [searchCourse]);
 
-  console.log(courseData);
   return (
     <>
       <div className="row">
